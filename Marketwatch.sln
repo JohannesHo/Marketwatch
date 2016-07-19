@@ -1,0 +1,42 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25123.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Marketwatch", "Marketwatch\Marketwatch.csproj", "{98E4C8CA-43BE-4620-B926-B2C9C7C1048B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{CD2D525A-41B2-482F-A684-2ACAA970B7A9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MarketwatchChatBot", "MarketwatchChatBot\MarketwatchChatBot.csproj", "{64BA0635-47D9-417C-9758-267A89166DFD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UpdateLib", "UpdateLib\UpdateLib.csproj", "{D90197F6-9BCB-456F-9913-DD99292BC6F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingTool", "HashingTool\HashingTool.csproj", "{1C8B0CE8-A000-4987-98B3-AEDA607AC812}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98E4C8CA-43BE-4620-B926-B2C9C7C1048B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98E4C8CA-43BE-4620-B926-B2C9C7C1048B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98E4C8CA-43BE-4620-B926-B2C9C7C1048B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98E4C8CA-43BE-4620-B926-B2C9C7C1048B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64BA0635-47D9-417C-9758-267A89166DFD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64BA0635-47D9-417C-9758-267A89166DFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64BA0635-47D9-417C-9758-267A89166DFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64BA0635-47D9-417C-9758-267A89166DFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D90197F6-9BCB-456F-9913-DD99292BC6F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D90197F6-9BCB-456F-9913-DD99292BC6F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D90197F6-9BCB-456F-9913-DD99292BC6F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D90197F6-9BCB-456F-9913-DD99292BC6F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C8B0CE8-A000-4987-98B3-AEDA607AC812}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C8B0CE8-A000-4987-98B3-AEDA607AC812}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C8B0CE8-A000-4987-98B3-AEDA607AC812}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C8B0CE8-A000-4987-98B3-AEDA607AC812}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
