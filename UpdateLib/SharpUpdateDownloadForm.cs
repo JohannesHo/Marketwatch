@@ -5,13 +5,11 @@ using System.IO;
 using System.Net;
 using System.Windows.Forms;
 
-namespace UpdateLib
-{
+namespace UpdateLib {
     /// <summary>
     /// Form that downloads the update
     /// </summary>
-    internal partial class SharpUpdateDownloadForm : Form
-    {
+    internal partial class SharpUpdateDownloadForm : Form {
         /// <summary>
         /// The web client to download the update
         /// </summary>
@@ -35,16 +33,14 @@ namespace UpdateLib
         /// <summary>
         /// Gets the temp file path for the downloaded file
         /// </summary>
-        internal string TempFilePath
-        {
+        internal string TempFilePath {
             get { return this.tempFile; }
         }
 
         /// <summary>
         /// Creates a new SharpUpdateDownloadForm
         /// </summary>
-        internal SharpUpdateDownloadForm(Uri location, string md5, Icon programIcon)
-        {
+        internal SharpUpdateDownloadForm(Uri location, string md5, Icon programIcon) {
             InitializeComponent();
 
             if (programIcon != null)
@@ -63,34 +59,26 @@ namespace UpdateLib
             bgWorker.DoWork += BgWorker_DoWork;
             bgWorker.RunWorkerCompleted += BgWorker_RunWorkerCompleted;
 
-            try { webClient.DownloadFileAsync(location, this.tempFile); }
-            catch { this.DialogResult = DialogResult.No; this.Close(); }
+            try { webClient.DownloadFileAsync(location, this.tempFile); } catch { this.DialogResult = DialogResult.No; this.Close(); }
         }
 
-        private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)
-        {
+        private void WebClient_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e) {
             this.progressBar.Value = e.ProgressPercentage;
             this.lblProgress.Text = $"Downloaded {FormatBytes(e.BytesReceived, 2, true)} of {FormatBytes(e.TotalBytesToReceive, 2, true)}";
         }
 
-        private string FormatBytes(long bytes, int decimalPlaces, bool showByteType)
-        {
+        private string FormatBytes(long bytes, int decimalPlaces, bool showByteType) {
             double newBytes = bytes;
             string formatString = "{0";
             string byteType = "B";
 
-            if (newBytes >= 0x00000400 && newBytes < 0x00100000)
-            {
+            if (newBytes >= 0x00000400 && newBytes < 0x00100000) {
                 newBytes /= 0x00000400;
                 byteType = "KB";
-            }
-            else if (newBytes >= 0x00100000 && newBytes < 0x40000000)
-            {
+            } else if (newBytes >= 0x00100000 && newBytes < 0x40000000) {
                 newBytes /= 0x00100000;
                 byteType = "MB";
-            }
-            else
-            {
+            } else {
                 newBytes /= 0x40000000;
                 byteType = "GB";
             }
@@ -109,20 +97,14 @@ namespace UpdateLib
             return string.Format(formatString, newBytes);
         }
 
-        private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e)
-        {
-            if (e.Error != null)
-            {
+        private void WebClient_DownloadFileCompleted(object sender, AsyncCompletedEventArgs e) {
+            if (e.Error != null) {
                 this.DialogResult = DialogResult.No;
                 this.Close();
-            }
-            else if (e.Cancelled)
-            {
+            } else if (e.Cancelled) {
                 this.DialogResult = DialogResult.Abort;
                 this.Close();
-            }
-            else
-            {
+            } else {
                 lblProgress.Text = "Verifying Download...";
                 progressBar.Style = ProgressBarStyle.Marquee;
 
@@ -130,8 +112,7 @@ namespace UpdateLib
             }
         }
 
-        private void BgWorker_DoWork(object sender, DoWorkEventArgs e)
-        {
+        private void BgWorker_DoWork(object sender, DoWorkEventArgs e) {
             string file = ((string[])e.Argument)[0];
             string updateMd5 = ((string[])e.Argument)[1];
 
@@ -141,22 +122,18 @@ namespace UpdateLib
                 e.Result = DialogResult.OK;
         }
 
-        private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
+        private void BgWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e) {
             this.DialogResult = (DialogResult)e.Result;
             this.Close();
         }
 
-        private void SharpUpdateDownloadForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            if (webClient.IsBusy)
-            {
+        private void SharpUpdateDownloadForm_FormClosed(object sender, FormClosedEventArgs e) {
+            if (webClient.IsBusy) {
                 webClient.CancelAsync();
                 this.DialogResult = DialogResult.Abort;
             }
 
-            if (bgWorker.IsBusy)
-            {
+            if (bgWorker.IsBusy) {
                 bgWorker.CancelAsync();
                 this.DialogResult = DialogResult.Abort;
             }

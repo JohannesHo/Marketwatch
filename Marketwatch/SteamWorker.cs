@@ -11,10 +11,8 @@ using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 
-namespace Marketwatch
-{
-    public class SteamWorker
-    {
+namespace Marketwatch {
+    public class SteamWorker {
         private SteamClient steamClient;
         private CallbackManager manager;
 
@@ -37,12 +35,11 @@ namespace Marketwatch
         private FormMarketwatch form;
 
         public Queue<Item> itemQueue { get; private set; }
-        public SteamWeb steamWeb { get; private set; } 
+        public SteamWeb steamWeb { get; private set; }
 
         public bool isSteamWebReady { get; private set; } = false;
 
-        public SteamWorker(string account, string password, FormMarketwatch form)
-        {
+        public SteamWorker(string account, string password, FormMarketwatch form) {
             user = account;
             pass = password;
             this.form = form;
@@ -59,8 +56,7 @@ namespace Marketwatch
             worker.Start();
         }
 
-        public void managingSteamEvents()
-        {
+        public void managingSteamEvents() {
             steamClient = new SteamClient();
             steamWeb = new SteamWeb();
 
@@ -80,15 +76,14 @@ namespace Marketwatch
             manager.Subscribe<SteamUser.LoginKeyCallback>(OnLoginKey);
 
             manager.Subscribe<SteamGameCoordinator.MessageCallback>(OnGCMessage);
-            
+
             Console.WriteLine("Connecting to Steam...");
 
             SteamDirectory.Initialize().Wait();
 
             steamClient.Connect();
 
-            while (isRunning)
-            {
+            while (isRunning) {
                 manager.RunWaitCallbacks(TimeSpan.FromSeconds(1));
             }
 
@@ -97,18 +92,15 @@ namespace Marketwatch
         }
 
 
-        private void OnConnected(SteamClient.ConnectedCallback callback)
-        {
-            if (callback.Result != EResult.OK)
-            {
+        private void OnConnected(SteamClient.ConnectedCallback callback) {
+            if (callback.Result != EResult.OK) {
                 Console.WriteLine("Unable to connect to Steam: {0}", callback.Result);
 
                 isRunning = false;
                 return;
             }
 
-            if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass))
-            {
+            if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass)) {
                 Console.WriteLine("Unable to sign in to Steam: bad user / password ", callback.Result);
 
                 isRunning = false;
@@ -121,16 +113,14 @@ namespace Marketwatch
             byte[] sentryHash = null;
             string sentryFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "Marketwatch\\MarketwatchSentry_" + user + ".bin");
 
-            if (File.Exists(sentryFilePath))
-            {
+            if (File.Exists(sentryFilePath)) {
                 // if we have a saved sentry file, read and sha-1 hash it
                 byte[] sentryFile = File.ReadAllBytes(sentryFilePath);
                 sentryHash = CryptoHelper.SHAHash(sentryFile);
             }
 
 
-            steamUser.LogOn(new SteamUser.LogOnDetails
-            {
+            steamUser.LogOn(new SteamUser.LogOnDetails {
                 Username = user,
                 Password = pass,
 
@@ -148,8 +138,7 @@ namespace Marketwatch
             });
         }
 
-        private void OnDisconnected(SteamClient.DisconnectedCallback callback)
-        {
+        private void OnDisconnected(SteamClient.DisconnectedCallback callback) {
             // after recieving an AccountLogonDenied, we'll be disconnected from steam
             // so after we read an authcode from the user, we need to reconnect to begin the logon flow again
 
@@ -160,13 +149,11 @@ namespace Marketwatch
             steamClient.Connect();
         }
 
-        private void OnLoggedOn(SteamUser.LoggedOnCallback callback)
-        {
+        private void OnLoggedOn(SteamUser.LoggedOnCallback callback) {
             bool isSteamGuard = callback.Result == EResult.AccountLogonDenied;
             bool is2FA = callback.Result == EResult.AccountLoginDeniedNeedTwoFactor;
 
-            if (isSteamGuard || is2FA)
-            {
+            if (isSteamGuard || is2FA) {
                 Console.WriteLine("This account is SteamGuard protected!");
 
                 if (is2FA)
@@ -177,8 +164,7 @@ namespace Marketwatch
                 return;
             }
 
-            if (callback.Result != EResult.OK)
-            {
+            if (callback.Result != EResult.OK) {
                 string msg = new StringBuilder(Resources.strings.LOGIN_UNABLE).Append(callback.Result).Append(" / ").Append(callback.ExtendedResult).ToString();
                 MessageBox.Show(msg, Resources.strings.LOGIN_FAILED, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
@@ -188,12 +174,11 @@ namespace Marketwatch
 
             Console.WriteLine("Successfully logged on!");
 
-            form.Invoke(new MethodInvoker(delegate
-            {
+            form.Invoke(new MethodInvoker(delegate {
                 ToolStripMenuItem item = (ToolStripMenuItem)((MenuStrip)form.Controls["menuStrip"]).Items["accToolStripMenuItem"];
                 item.DropDownItems["loginToolStripMenuItem"].Enabled = false;
                 item.DropDownItems["logoutToolStripMenuItem"].Enabled = true;
-                
+
                 Label accLabel = (Label)((FlowLayoutPanel)form.Controls["accFlowLayoutPanel"]).Controls["accLabel"];
                 accLabel.Text = user;
             }));
@@ -215,13 +200,11 @@ namespace Marketwatch
             worker.Start();
         }
 
-        private void OnLoggedOff(SteamUser.LoggedOffCallback callback)
-        {
+        private void OnLoggedOff(SteamUser.LoggedOffCallback callback) {
             Console.WriteLine("Logged off of Steam: {0}", callback.Result);
         }
 
-        private void OnMachineAuth(SteamUser.UpdateMachineAuthCallback callback)
-        {
+        private void OnMachineAuth(SteamUser.UpdateMachineAuthCallback callback) {
             Console.WriteLine("Updating sentryfile...");
 
             // write out our sentry file
@@ -236,22 +219,19 @@ namespace Marketwatch
             if (!sentryFileInfo.Directory.Exists)
                 sentryFileInfo.Directory.Create();
 
-            using (var fs = File.Open(sentryFileInfo.FullName, FileMode.OpenOrCreate, FileAccess.ReadWrite))
-            {
+            using (var fs = File.Open(sentryFileInfo.FullName, FileMode.OpenOrCreate, FileAccess.ReadWrite)) {
                 fs.Seek(callback.Offset, SeekOrigin.Begin);
                 fs.Write(callback.Data, 0, callback.BytesToWrite);
                 fileSize = (int)fs.Length;
 
                 fs.Seek(0, SeekOrigin.Begin);
-                using (var sha = new SHA1CryptoServiceProvider())
-                {
+                using (var sha = new SHA1CryptoServiceProvider()) {
                     sentryHash = sha.ComputeHash(fs);
                 }
             }
 
             // inform the steam servers that we're accepting this sentry file
-            steamUser.SendMachineAuthResponse(new SteamUser.MachineAuthDetails
-            {
+            steamUser.SendMachineAuthResponse(new SteamUser.MachineAuthDetails {
                 JobID = callback.JobID,
 
                 FileName = callback.FileName,
@@ -271,48 +251,42 @@ namespace Marketwatch
             Console.WriteLine("Done!");
         }
 
-        private void OnWalletInfo(SteamUser.WalletInfoCallback callback)
-        {
-            form.Invoke(new MethodInvoker(delegate
-            {
+        private void OnWalletInfo(SteamUser.WalletInfoCallback callback) {
+            form.Invoke(new MethodInvoker(delegate {
                 form.Controls["walletAmount"].Text = String.Format(Currency.GetCultureInfoByCurrencySymbol(callback.Currency.ToString()), "{0,10:C}", (callback.Balance / 100.0));
                 Properties.Settings.Default.currency = int.Parse(callback.Currency.ToString("d"));
             }));
         }
 
-        private void OnLoginKey(SteamUser.LoginKeyCallback callback)
-        {
+        private void OnLoginKey(SteamUser.LoginKeyCallback callback) {
             isSteamWebReady = steamWeb.Authenticate(callback.UniqueID, steamClient, myUserNonce);
         }
 
-        private async void OnGCMessage(SteamGameCoordinator.MessageCallback callback)
-        {
-            if (callback.EMsg == (uint)EGCBaseClientMsg.k_EMsgGCClientWelcome)
-            {
+        private async void OnGCMessage(SteamGameCoordinator.MessageCallback callback) {
+            if (callback.EMsg == (uint)EGCBaseClientMsg.k_EMsgGCClientWelcome) {
                 Console.WriteLine("Got Welcome");
 
                 welcomeWaitHandle.Set();
 
-                form.Invoke(new MethodInvoker(delegate
-                {
+                form.Invoke(new MethodInvoker(delegate {
                     form.Controls["searchButton"].Enabled = true;
                 }));
             }
 
-            if (callback.EMsg == (uint)ECsgoGCMsg.k_EMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockResponse)
-            {
+            if (callback.EMsg == (uint)ECsgoGCMsg.k_EMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockResponse) {
                 var response = new ClientGCMsgProtobuf<CMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockResponse>((uint)ECsgoGCMsg.k_EMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockResponse);
                 response.Deserialize(callback.Message.GetData());
 
                 uint paintIndex = response.Body.iteminfo.paintindex; //index
                 double wearFloat = Convert.ToDouble(BitConverter.ToSingle(BitConverter.GetBytes(response.Body.iteminfo.paintwear), 0)); //float
 
-                Console.WriteLine(String.Format("{0,4} {1,20}", ++count, wearFloat));
-
                 UInt64 listingId;
                 //If item already removed skip progressing.
                 if (!form.lookupDict.TryRemove(BitConverter.ToUInt64(BitConverter.GetBytes(response.Body.iteminfo.itemid), 0), out listingId))
                     return;
+
+                //only print item float if its going to be added
+                Console.WriteLine(String.Format("{0,4} {1,20}", ++count, wearFloat));
 
                 //Else progress item
                 Item currentItem;
@@ -325,8 +299,7 @@ namespace Marketwatch
 
                 DataGridViewRow row = await currentItem.itemToRow(dgv);
 
-                form.Invoke(new MethodInvoker(delegate
-                {
+                form.Invoke(new MethodInvoker(delegate {
                     dgv.Rows.Add(row);
                     form.Controls["labelCurrent"].Text = String.Format("{0,4}", dgv.RowCount);
                 }));
@@ -337,55 +310,53 @@ namespace Marketwatch
             }
         }
 
-        public void ItemEventHandler(object sender, ItemEventArgs args)
-        {
+        public void ItemEventHandler(object sender, ItemEventArgs args) {
             itemQueue.Enqueue(args.item);
         }
 
-        private void handleUIRequests()
-        {
-            while (isRunning)
-            {
-                while (itemQueue.Count > 0 && isRunning)
-                {
+        private void handleUIRequests() {
+            while (isRunning) {
+                while (itemQueue.Count > 0 && isRunning) {
                     Item item = itemQueue.Dequeue();
+                    Console.WriteLine("Dequeued item: " + item);
                     int retryCount = 0;
-                    do item.requestItemPreviewData(steamGameCoordinator);
-                    while (!itemWaitHandle.WaitOne(750) && retryCount++ < 5 && isRunning);
+                    do {
+                        item.requestItemPreviewData(steamGameCoordinator); Thread.Sleep(Properties.Settings.Default.timeBetweenFloatRequests);
+                    }
+                    while (!itemWaitHandle.WaitOne(Properties.Settings.Default.timeBetweenFloatRequests * 6) && retryCount++ < 5 && isRunning);
+
+                    if (retryCount > 5)
+                        Console.WriteLine("Request trys depleted.");
+
                     itemWaitHandle.Reset();
                 }
                 Thread.Sleep(250);
             }
         }
 
-        private void handleClientStart()
-        {
+        private void handleClientStart() {
             var clientHello = new ClientGCMsgProtobuf<CMsgClientHello>((uint)EGCBaseClientMsg.k_EMsgGCClientHello);
             do steamGameCoordinator.Send(clientHello, 730);
             while (!welcomeWaitHandle.WaitOne(500));
         }
 
-        private void handleSteamGuard(string msg, ref string methode)
-        {
+        private void handleSteamGuard(string msg, ref string methode) {
             string value = null;
             DialogResult result = InputBox(Resources.strings.AUTH, msg, ref value);
             if (result == DialogResult.OK)
                 methode = value;
-            else if (result == DialogResult.Cancel)
-            {
+            else if (result == DialogResult.Cancel) {
                 Console.WriteLine("SteamGuard authentification canceled aborting login attempt.");
                 isRunning = false;
             }
         }
 
-        public void stopExecution()
-        {
+        public void stopExecution() {
             Console.WriteLine("Stopping execution of SteamWorker.");
             isRunning = false;
         }
 
-        private static DialogResult InputBox(string title, string promptText, ref string value)
-        {
+        private static DialogResult InputBox(string title, string promptText, ref string value) {
             Form form = new Form();
             Label label = new Label();
             TextBox textBox = new TextBox();

@@ -3,14 +3,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 
-namespace Marketwatch
-{
-    class Currency
-    {
-        public static CultureInfo GetCultureInfoByCurrencySymbol(string currencySymbol)
-        {
-            if (currencySymbol == null)
-            {
+namespace Marketwatch {
+    class Currency {
+        public static CultureInfo GetCultureInfoByCurrencySymbol(string currencySymbol) {
+            if (currencySymbol == null) {
                 throw new ArgumentNullException("currencySymbol");
             }
 

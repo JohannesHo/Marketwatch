@@ -8,10 +8,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Marketwatch
-{
-    static class Marketwatch
-    {
+namespace Marketwatch {
+    static class Marketwatch {
         public static bool isDebug = false;
 
         [DllImport("kernel32.dll",
@@ -33,17 +31,14 @@ namespace Marketwatch
         /// Der Haupteinstiegspunkt für die Anwendung.
         /// </summary>
         [STAThread]
-        static void Main()
-        {
+        static void Main() {
             String keyName = "HKEY_CURRENT_USER\\SOFTWARE\\Microsoft\\Internet Explorer\\Main\\FeatureControl\\FEATURE_BROWSER_EMULATION";
-            if (Registry.GetValue(keyName, "Marketwatch.exe", null) == null)
-            {
+            if (Registry.GetValue(keyName, "Marketwatch.exe", null) == null) {
                 Registry.SetValue(keyName, "Marketwatch.exe", 0x2711, RegistryValueKind.DWord);
             }
 
             checkDebugging();
-            if (isDebug)
-            {
+            if (isDebug) {
                 AllocConsole();
                 IntPtr stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
                 SafeFileHandle safeFileHandle = new SafeFileHandle(stdHandle, true);
@@ -53,24 +48,20 @@ namespace Marketwatch
                 standardOutput.AutoFlush = true;
                 Console.SetOut(standardOutput);
 
-                if (Registry.GetValue(keyName, "Marketwatch.vshost.exe", null) == null)
-                {
+                if (Registry.GetValue(keyName, "Marketwatch.vshost.exe", null) == null) {
                     Registry.SetValue(keyName, "Marketwatch.vshost.exe", 0x2711, RegistryValueKind.DWord);
                 }
             }
             //Update Settings if needed
-            if (Properties.Settings.Default.upgradeRequired)
-            {
+            if (Properties.Settings.Default.upgradeRequired) {
                 Properties.Settings.Default.Upgrade();
                 Properties.Settings.Default.upgradeRequired = false;
                 Properties.Settings.Default.Save();
             }
 
-            if (Properties.Settings.Default.language != "")
-            {
+            if (Properties.Settings.Default.language != "") {
                 string language_string = "";
-                switch (Properties.Settings.Default.language)
-                {
+                switch (Properties.Settings.Default.language) {
                     case "English":
                         language_string = "en";
                         break;
@@ -83,7 +74,7 @@ namespace Marketwatch
                 }
                 CultureInfo.DefaultThreadCurrentUICulture = new CultureInfo(language_string);
             }
-            
+
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -91,8 +82,7 @@ namespace Marketwatch
         }
 
         [ConditionalAttribute("DEBUG")]
-        public static void checkDebugging()
-        {
+        public static void checkDebugging() {
             isDebug = true;
         }
     }

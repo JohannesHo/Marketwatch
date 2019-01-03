@@ -3,13 +3,11 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Reflection;
 
-namespace UpdateLib
-{
+namespace UpdateLib {
     /// <summary>
     /// The interface that all applications need to implement in order to use UpdateLib
     /// </summary>
-    public interface ISharpUpdatable
-    {   
+    public interface ISharpUpdatable {
         /// <summary>
         /// The name of your application as you want it displayed on the update form
         /// </summary>

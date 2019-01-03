@@ -3,23 +3,17 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
 
-namespace Marketwatch
-{
-    public partial class FormLogin : Form
-    {
+namespace Marketwatch {
+    public partial class FormLogin : Form {
         public string user, pass;
-        public FormLogin()
-        {
+        public FormLogin() {
             InitializeComponent();
         }
 
-        private void loginButton_Click(object sender, EventArgs e)
-        {
-            if (checkBoxRemember.Checked)
-            {
+        private void loginButton_Click(object sender, EventArgs e) {
+            if (checkBoxRemember.Checked) {
                 byte[] entropy = new byte[32];
-                using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider())
-                {
+                using (RNGCryptoServiceProvider rng = new RNGCryptoServiceProvider()) {
                     rng.GetBytes(entropy);
                 }
 

@@ -2,13 +2,11 @@
 using System.Text;
 using System.Security.Cryptography;
 
-namespace UpdateLib
-{
+namespace UpdateLib {
     /// <summary>
     /// The type of has to create
     /// </summary>
-    internal enum HashType
-    {
+    internal enum HashType {
         MD5,
         SHA1,
         SHA512
@@ -17,21 +15,18 @@ namespace UpdateLib
     /// <summary>
     /// Class used to generate hash sums of files
     /// </summary>
-    internal static class Hasher
-    {
+    internal static class Hasher {
         /// <summary>
         /// Generate a hash sum of a file
         /// </summary>
         /// <param name="filePath">The file to hash</param>
         /// <param name="algo">The Type of hash</param>
         /// <returns>The computed hash</returns>
-        internal static string HashFile(string filePath, HashType algo)
-        {
+        internal static string HashFile(string filePath, HashType algo) {
             FileStream file = new FileStream(filePath, FileMode.Open);
             string hash = "";
 
-            switch (algo)
-            {
+            switch (algo) {
                 case HashType.MD5:
                     hash = MakeHashString(MD5.Create().ComputeHash(file));
                     break;
@@ -55,8 +50,7 @@ namespace UpdateLib
         /// </summary>
         /// <param name="hash">The hash to convert</param>
         /// <returns>Hash as string</returns>
-        private static string MakeHashString(byte[] hash)
-        {
+        private static string MakeHashString(byte[] hash) {
             StringBuilder sb = new StringBuilder(hash.Length * 2);
 
             foreach (byte b in hash)

@@ -8,22 +8,17 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Marketwatch
-{
-    public partial class FormAbout : Form
-    {
-        public FormAbout()
-        {
+namespace Marketwatch {
+    public partial class FormAbout : Form {
+        public FormAbout() {
             InitializeComponent();
         }
 
-        private void buttonClose_Click(object sender, EventArgs e)
-        {
+        private void buttonClose_Click(object sender, EventArgs e) {
             this.Dispose();
         }
 
-        private void FormAbout_Load(object sender, EventArgs e)
-        {
+        private void FormAbout_Load(object sender, EventArgs e) {
             versionLabel.Text = "Version: " + Application.ProductVersion;
         }
     }

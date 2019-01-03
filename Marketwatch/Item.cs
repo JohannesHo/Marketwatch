@@ -8,10 +8,8 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Marketwatch
-{
-    public class Item
-    {
+namespace Marketwatch {
+    public class Item {
         private uint _paintIndex;
 
         public UInt64 param_s { get; set; }
@@ -32,13 +30,10 @@ namespace Marketwatch
         public string[] stickerNames { get; set; }
         public List<Task<Image>> stickerImages { get; set; } = new List<Task<Image>>();
 
-        public uint paintIndex
-        {
+        public uint paintIndex {
             get { return _paintIndex; }
-            set
-            {
-                switch (value)
-                {
+            set {
+                switch (value) {
                     case 415:
                         pattern = "Ruby";
                         break;
@@ -64,19 +59,18 @@ namespace Marketwatch
                         pattern = "Phase 3";
                         break;
                     case 572:
-                    case 421: 
+                    case 421:
                         pattern = "Phase 4";
                         break;
                     default:
                         pattern = null;
                         break;
                 }
-            _paintIndex = value;
+                _paintIndex = value;
+            }
         }
-    }
 
-    public static Item newItemFromURL(String url)
-        {
+        public static Item newItemFromURL(String url) {
             Item item = new Item();
             Match match = Regex.Match(url, "(?:S(?<param_s>[0-9]+)|M(?<param_m>[0-9]+))A(?<param_a>[0-9]+)D(?<param_d>[0-9]+)");
 
@@ -88,8 +82,7 @@ namespace Marketwatch
             return item;
         }
 
-        public bool requestItemPreviewData(SteamGameCoordinator steamGameCoordinator)
-        {
+        public bool requestItemPreviewData(SteamGameCoordinator steamGameCoordinator) {
             var requestPreviewData = new ClientGCMsgProtobuf<CMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockRequest>((uint)ECsgoGCMsg.k_EMsgGCCStrike15_v2_Client2GCEconPreviewDataBlockRequest);
 
             requestPreviewData.Body.param_s = this.param_s;
@@ -102,10 +95,9 @@ namespace Marketwatch
             return true;
         }
 
-        public async Task<DataGridViewRow> itemToRow(DataGridView dataGridViewAsTemplate)
-        {
+        public async Task<DataGridViewRow> itemToRow(DataGridView dataGridViewAsTemplate) {
             DataGridViewRow row = CloneWithValues(dataGridViewAsTemplate.RowTemplate);
-            DataGridViewRichTextBoxCell nameCell = (DataGridViewRichTextBoxCell) row.Cells[dataGridViewAsTemplate.Columns["itemNameColumn"].Index];
+            DataGridViewRichTextBoxCell nameCell = (DataGridViewRichTextBoxCell)row.Cells[dataGridViewAsTemplate.Columns["itemNameColumn"].Index];
 
             if (!String.IsNullOrEmpty(this.pattern))
                 nameCell.Value = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1031{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif; } }\viewkind4\uc1\pard\f0\fs17\up0 " + this.name.Replace("★", @"\u9733?") + @" \up6\fs13 " + this.pattern + @"\up0\par}";
@@ -124,18 +116,15 @@ namespace Marketwatch
             return row;
         }
 
-        public DataGridViewRow CloneWithValues(DataGridViewRow row)
-        {
+        public DataGridViewRow CloneWithValues(DataGridViewRow row) {
             DataGridViewRow clonedRow = (DataGridViewRow)row.Clone();
-            for (Int32 index = 0; index < row.Cells.Count; index++)
-            {
+            for (Int32 index = 0; index < row.Cells.Count; index++) {
                 clonedRow.Cells[index].Value = row.Cells[index].Value;
             }
             return clonedRow;
         }
 
-        public override string ToString()
-        {
+        public override string ToString() {
             return $"S[{param_s}] A[{param_a,10}] D[{param_d,20}] M[{param_m,18}]";
         }
     }

@@ -136,7 +136,7 @@
   <data name="checkBoxUpdate.Size" type="System.Drawing.Size, System.Drawing">
     <value>231, 17</value>
   </data>
-  <data name="checkBoxUpdate.Text" xml:space="preserve">
+  <data name="updateCheckBox.Text" xml:space="preserve">
     <value>Bei Programmstart auf Aktualisierung prüfen</value>
   </data>
   <data name="settingLabel3.Size" type="System.Drawing.Size, System.Drawing">
@@ -3531,5 +3531,8 @@
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Marketwatch - Optionen</value>
+  </data>
+  <data name="settingLabel4.Text" xml:space="preserve">
+    <value>Zeit zwischen float-Anfragen (ms)</value>
   </data>
 </root>

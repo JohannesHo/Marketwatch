@@ -8,13 +8,11 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace UpdateLib
-{
+namespace UpdateLib {
     /// <summary>
     /// Form to promt the user to accept the update
     /// </summary>
-    internal partial class SharpUpdateAcceptForm : Form
-    {
+    internal partial class SharpUpdateAcceptForm : Form {
         /// <summary>
         /// The program to update's info
         /// </summary>
@@ -35,8 +33,7 @@ namespace UpdateLib
         /// </summary>
         /// <param name="applicationInfo"></param>
         /// <param name="updateInfo"></param>
-        internal SharpUpdateAcceptForm(ISharpUpdatable applicationInfo, SharpUpdateXml updateInfo)
-        {
+        internal SharpUpdateAcceptForm(ISharpUpdatable applicationInfo, SharpUpdateXml updateInfo) {
             InitializeComponent();
 
             this.applicationInfo = applicationInfo;
@@ -52,20 +49,17 @@ namespace UpdateLib
             this.lblNewVersion.Text = $"New Version: {this.updateInfo.Version.ToString()}";
         }
 
-        private void btnYes_Click(object sender, EventArgs e)
-        {
+        private void btnYes_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.Yes;
             this.Close();
         }
 
-        private void btnNo_Click(object sender, EventArgs e)
-        {
+        private void btnNo_Click(object sender, EventArgs e) {
             this.DialogResult = DialogResult.No;
             this.Close();
         }
 
-        private void btnDetails_Click(object sender, EventArgs e)
-        {
+        private void btnDetails_Click(object sender, EventArgs e) {
             if (this.updateInfoForm == null)
                 this.updateInfoForm = new SharpUpdateInfoFrom(this.applicationInfo, this.updateInfo);
 

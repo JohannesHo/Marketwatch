@@ -13,14 +13,12 @@ using System.Net.Security;
 using SteamKit2;
 using System.Collections.Generic;
 
-namespace Marketwatch
-{
+namespace Marketwatch {
 
     /// <summary>
     /// SteamWeb class to create an API endpoint to the Steam Web.
     /// </summary>
-    public class SteamWeb
-    {
+    public class SteamWeb {
         /// <summary>
         /// Base steam community domain.
         /// </summary>
@@ -62,20 +60,15 @@ namespace Marketwatch
         /// <param name="fetchError">If true, response codes other than HTTP 200 will still be returned, rather than throwing exceptions</param>
         /// <returns>The string of the http return stream.</returns>
         /// <remarks>If you want to know how the request method works, use: <see cref="SteamWeb.Request"/></remarks>
-        public string Fetch(string url, string method, NameValueCollection data = null, bool ajax = true, string referer = "", bool fetchError = false)
-        {
+        public string Fetch(string url, string method, NameValueCollection data = null, bool ajax = true, string referer = "", bool fetchError = false) {
             // Reading the response as stream and read it to the end. After that happened return the result as string.
-            using (HttpWebResponse response = Request(url, method, data, ajax, referer, fetchError))
-            {
-                using (Stream responseStream = response.GetResponseStream())
-                {
+            using (HttpWebResponse response = Request(url, method, data, ajax, referer, fetchError)) {
+                using (Stream responseStream = response.GetResponseStream()) {
                     // If the response stream is null it cannot be read. So return an empty string.
-                    if (responseStream == null)
-                    {
+                    if (responseStream == null) {
                         return "";
                     }
-                    using (StreamReader reader = new StreamReader(responseStream))
-                    {
+                    using (StreamReader reader = new StreamReader(responseStream)) {
                         return reader.ReadToEnd();
                     }
                 }
@@ -92,8 +85,7 @@ namespace Marketwatch
         /// <param name="referer">Gets information about the URL of the client's previous request that linked to the current URL.</param>
         /// <param name="fetchError">Return response even if its status code is not 200</param>
         /// <returns>An instance of a HttpWebResponse object.</returns>
-        public HttpWebResponse Request(string url, string method, NameValueCollection data = null, bool ajax = true, string referer = "", bool fetchError = false)
-        {
+        public HttpWebResponse Request(string url, string method, NameValueCollection data = null, bool ajax = true, string referer = "", bool fetchError = false) {
             // Append the data to the URL for GET-requests.
             bool isGetMethod = (method.ToLower() == "get");
             string dataString = (data == null ? null : String.Join("&", Array.ConvertAll(data.AllKeys, key =>
@@ -105,8 +97,7 @@ namespace Marketwatch
             // string dataString = (data == null ? null : String.Join("&", Array.ConvertAll(data.AllKeys, key => $"{HttpUtility.UrlEncode(key)}={HttpUtility.UrlEncode(data[key])}" )));
 
             // Append the dataString to the url if it is a GET request.
-            if (isGetMethod && !string.IsNullOrEmpty(dataString))
-            {
+            if (isGetMethod && !string.IsNullOrEmpty(dataString)) {
                 url += (url.Contains("?") ? "&" : "?") + dataString;
             }
 
@@ -123,8 +114,7 @@ namespace Marketwatch
             request.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
 
             // If the request is an ajax request we need to add various other Headers, defined below.
-            if (ajax)
-            {
+            if (ajax) {
                 request.Headers.Add("X-Requested-With", "XMLHttpRequest");
                 request.Headers.Add("X-Prototype-Version", "1.7");
             }
@@ -133,8 +123,7 @@ namespace Marketwatch
             request.CookieContainer = _cookies;
 
             // If the request is a GET request return now the response. If not go on. Because then we need to apply data to the request.
-            if (isGetMethod || string.IsNullOrEmpty(dataString))
-            {
+            if (isGetMethod || string.IsNullOrEmpty(dataString)) {
                 return request.GetResponse() as HttpWebResponse;
             }
 
@@ -142,24 +131,18 @@ namespace Marketwatch
             byte[] dataBytes = Encoding.UTF8.GetBytes(dataString);
             request.ContentLength = dataBytes.Length;
 
-            using (Stream requestStream = request.GetRequestStream())
-            {
+            using (Stream requestStream = request.GetRequestStream()) {
                 requestStream.Write(dataBytes, 0, dataBytes.Length);
             }
 
             // Get the response and return it.
-            try
-            {
+            try {
                 return request.GetResponse() as HttpWebResponse;
-            }
-            catch (WebException ex)
-            {
+            } catch (WebException ex) {
                 //this is thrown if response code is not 200
-                if (fetchError)
-                {
+                if (fetchError) {
                     var resp = ex.Response as HttpWebResponse;
-                    if (resp != null)
-                    {
+                    if (resp != null) {
                         return resp;
                     }
                 }
@@ -175,23 +158,20 @@ namespace Marketwatch
         /// <param name="username">Your Steam username.</param>
         /// <param name="password">Your Steam password.</param>
         /// <returns>A bool containing a value, if the login was successful.</returns>
-        public bool DoLogin(string username, string password)
-        {
+        public bool DoLogin(string username, string password) {
             var data = new NameValueCollection { { "username", username } };
             // First get the RSA key with which we will encrypt our password.
             string response = Fetch("https://steamcommunity.com/login/getrsakey", "POST", data, false);
             GetRsaKey rsaJson = JsonConvert.DeserializeObject<GetRsaKey>(response);
 
             // Validate, if we could get the rsa key.
-            if (!rsaJson.success)
-            {
+            if (!rsaJson.success) {
                 return false;
             }
 
             // RSA Encryption.
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider();
-            RSAParameters rsaParameters = new RSAParameters
-            {
+            RSAParameters rsaParameters = new RSAParameters {
                 Exponent = HexToByte(rsaJson.publickey_exp),
                 Modulus = HexToByte(rsaJson.publickey_mod)
             };
@@ -209,8 +189,7 @@ namespace Marketwatch
             string steamGuardId = "";
 
             // Do this while we need a captcha or need email authentification. Probably you have misstyped the captcha or the SteamGaurd code if this comes multiple times.
-            do
-            {
+            do {
                 Console.WriteLine("SteamWeb: Logging In...");
 
                 bool captcha = loginJson != null && loginJson.captcha_needed;
@@ -221,8 +200,7 @@ namespace Marketwatch
                 string capGid = string.Empty;
                 // Response does not need to send if captcha is needed or not.
                 // ReSharper disable once MergeSequentialChecks
-                if (loginJson != null && loginJson.captcha_gid != null)
-                {
+                if (loginJson != null && loginJson.captcha_gid != null) {
                     capGid = Uri.EscapeDataString(loginJson.captcha_gid);
                 }
 
@@ -230,14 +208,12 @@ namespace Marketwatch
 
                 // Captcha Check.
                 string capText = "";
-                if (captcha)
-                {
+                if (captcha) {
                     Console.WriteLine("SteamWeb: Captcha is needed.");
                     System.Diagnostics.Process.Start("https://steamcommunity.com/public/captcha.php?gid=" + loginJson.captcha_gid);
                     Console.WriteLine("SteamWeb: Type the captcha:");
                     string consoleText = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(consoleText))
-                    {
+                    if (!string.IsNullOrEmpty(consoleText)) {
                         capText = Uri.EscapeDataString(consoleText);
                     }
                 }
@@ -253,13 +229,11 @@ namespace Marketwatch
 
                 // SteamGuard check. If SteamGuard is enabled you need to enter it. Care probably you need to wait 7 days to trade.
                 // For further information about SteamGuard see: https://support.steampowered.com/kb_article.php?ref=4020-ALZM-5519&l=english.
-                if (steamGuard)
-                {
+                if (steamGuard) {
                     Console.WriteLine("SteamWeb: SteamGuard is needed.");
                     Console.WriteLine("SteamWeb: Type the code:");
                     string consoleText = Console.ReadLine();
-                    if (!string.IsNullOrEmpty(consoleText))
-                    {
+                    if (!string.IsNullOrEmpty(consoleText)) {
                         steamGuardText = Uri.EscapeDataString(consoleText);
                     }
                     steamGuardId = loginJson.emailsteamid;
@@ -283,15 +257,12 @@ namespace Marketwatch
                 data.Add("rsatimestamp", time);
 
                 // Sending the actual login.
-                using (HttpWebResponse webResponse = Request("https://steamcommunity.com/login/dologin/", "POST", data, false))
-                {
+                using (HttpWebResponse webResponse = Request("https://steamcommunity.com/login/dologin/", "POST", data, false)) {
                     var stream = webResponse.GetResponseStream();
-                    if (stream == null)
-                    {
+                    if (stream == null) {
                         return false;
                     }
-                    using (StreamReader reader = new StreamReader(stream))
-                    {
+                    using (StreamReader reader = new StreamReader(stream)) {
                         string json = reader.ReadToEnd();
                         loginJson = JsonConvert.DeserializeObject<SteamResult>(json);
                         cookieCollection = webResponse.Cookies;
@@ -300,11 +271,9 @@ namespace Marketwatch
             } while (loginJson.captcha_needed || loginJson.emailauth_needed);
 
             // If the login was successful, we need to enter the cookies to steam.
-            if (loginJson.success)
-            {
+            if (loginJson.success) {
                 _cookies = new CookieContainer();
-                foreach (Cookie cookie in cookieCollection)
-                {
+                foreach (Cookie cookie in cookieCollection) {
                     _cookies.Add(cookie);
                 }
                 SubmitCookies(_cookies);
@@ -312,9 +281,7 @@ namespace Marketwatch
                 initalized = true;
 
                 return true;
-            }
-            else
-            {
+            } else {
                 Console.WriteLine("SteamWeb Error: " + loginJson.message);
                 return false;
             }
@@ -330,21 +297,18 @@ namespace Marketwatch
         /// <param name="client">An instance of a SteamClient.</param>
         /// <param name="myLoginKey">Login Key of your account.</param>
         /// <returns>A bool, which is true if the login was successful.</returns>
-        public bool Authenticate(uint myUniqueId, SteamClient client, string myLoginKey)
-        {
+        public bool Authenticate(uint myUniqueId, SteamClient client, string myLoginKey) {
             Token = TokenSecure = "";
             SessionId = Convert.ToBase64String(Encoding.UTF8.GetBytes(myUniqueId.ToString()));
             _cookies = new CookieContainer();
 
-            using (dynamic userAuth = WebAPI.GetInterface("ISteamUserAuth", null))
-            {
+            using (dynamic userAuth = WebAPI.GetInterface("ISteamUserAuth", null)) {
                 // Generate an AES session key.
                 var sessionKey = CryptoHelper.GenerateRandomBlock(32);
 
                 // rsa encrypt it with the public key for the universe we're on
                 byte[] cryptedSessionKey;
-                using (RSACrypto rsa = new RSACrypto(KeyDictionary.GetPublicKey(client.ConnectedUniverse)))
-                {
+                using (RSACrypto rsa = new RSACrypto(KeyDictionary.GetPublicKey(client.ConnectedUniverse))) {
                     cryptedSessionKey = rsa.Encrypt(sessionKey);
                 }
 
@@ -357,8 +321,7 @@ namespace Marketwatch
                 KeyValue authResult;
 
                 // Get the Authentification Result.
-                try
-                {
+                try {
                     Dictionary<string, string> args = new Dictionary<string, string>();
                     string steamid = client.SteamID.ConvertToUInt64().ToString();
                     string sessionkey = HttpUtility.UrlEncode(cryptedSessionKey);
@@ -375,9 +338,7 @@ namespace Marketwatch
                     //    method: "POST",
                     //    secure: true
                     //    );
-                }
-                catch (Exception)
-                {
+                } catch (Exception) {
                     Token = TokenSecure = null;
                     return false;
                 }
@@ -402,14 +363,12 @@ namespace Marketwatch
         /// </summary>
         /// <param name="cookies">An array of cookies from a browser or whatever source. Must contain sessionid, steamLogin, steamLoginSecure</param>
         /// <exception cref="ArgumentException">One of the required cookies(steamLogin, steamLoginSecure, sessionid) is missing.</exception>
-        public void Authenticate(System.Collections.Generic.IEnumerable<Cookie> cookies)
-        {
+        public void Authenticate(System.Collections.Generic.IEnumerable<Cookie> cookies) {
             var cookieContainer = new CookieContainer();
             string token = null;
             string tokenSecure = null;
             string sessionId = null;
-            foreach (var cookie in cookies)
-            {
+            foreach (var cookie in cookies) {
                 if (cookie.Name == "sessionid")
                     sessionId = cookie.Value;
                 else if (cookie.Name == "steamLogin")
@@ -435,10 +394,8 @@ namespace Marketwatch
         /// Helper method to verify our precious cookies.
         /// </summary>
         /// <returns>true if cookies are correct; false otherwise</returns>
-        public bool VerifyCookies()
-        {
-            using (HttpWebResponse response = Request("http://steamcommunity.com/", "HEAD"))
-            {
+        public bool VerifyCookies() {
+            using (HttpWebResponse response = Request("http://steamcommunity.com/", "HEAD")) {
                 return response.Cookies["steamLogin"] == null || !response.Cookies["steamLogin"].Value.Equals("deleted");
             }
         }
@@ -447,13 +404,11 @@ namespace Marketwatch
         /// Method to submit cookies to Steam after Login.
         /// </summary>
         /// <param name="cookies">Cookiecontainer which contains cookies after the login to Steam.</param>
-        static void SubmitCookies(CookieContainer cookies)
-        {
+        static void SubmitCookies(CookieContainer cookies) {
             HttpWebRequest w = WebRequest.Create("https://steamcommunity.com/") as HttpWebRequest;
 
             // Check, if the request is null.
-            if (w == null)
-            {
+            if (w == null) {
                 return;
             }
             w.Method = "POST";
@@ -469,18 +424,15 @@ namespace Marketwatch
         /// </summary>
         /// <param name="hex">Input parameter as string.</param>
         /// <returns>The byte value.</returns>
-        private byte[] HexToByte(string hex)
-        {
-            if (hex.Length % 2 == 1)
-            {
+        private byte[] HexToByte(string hex) {
+            if (hex.Length % 2 == 1) {
                 throw new Exception("The binary key cannot have an odd number of digits");
             }
 
             byte[] arr = new byte[hex.Length >> 1];
             int l = hex.Length;
 
-            for (int i = 0; i < (l >> 1); ++i)
-            {
+            for (int i = 0; i < (l >> 1); ++i) {
                 arr[i] = (byte)((GetHexVal(hex[i << 1]) << 4) + (GetHexVal(hex[(i << 1) + 1])));
             }
 
@@ -492,8 +444,7 @@ namespace Marketwatch
         /// </summary>
         /// <param name="hex">Input parameter.</param>
         /// <returns>A Hex Value as int.</returns>
-        private int GetHexVal(char hex)
-        {
+        private int GetHexVal(char hex) {
             int val = hex;
             return val - (val < 58 ? 48 : 55);
         }
@@ -506,8 +457,7 @@ namespace Marketwatch
         /// <param name="chain">The chain of certificate authorities associated with the remote certificate.</param>
         /// <param name="policyErrors">One or more errors associated with the remote certificate.</param>
         /// <returns>Always true to accept all certificates.</returns>
-        public bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors)
-        {
+        public bool ValidateRemoteCertificate(object sender, X509Certificate certificate, X509Chain chain, SslPolicyErrors policyErrors) {
             return true;
         }
     }
@@ -520,8 +470,7 @@ namespace Marketwatch
     /// Class to Deserialize the json response strings of the getResKey request. See: <see cref="SteamWeb.DoLogin"/>
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class GetRsaKey
-    {
+    public class GetRsaKey {
         public bool success { get; set; }
 
         public string publickey_mod { get; set; }
@@ -541,8 +490,7 @@ namespace Marketwatch
     /// Class to Deserialize the json response strings after the login. See: <see cref="SteamWeb.DoLogin"/>
     /// </summary>
     [SuppressMessage("ReSharper", "InconsistentNaming")]
-    public class SteamResult
-    {
+    public class SteamResult {
         public bool success { get; set; }
 
         public string message { get; set; }

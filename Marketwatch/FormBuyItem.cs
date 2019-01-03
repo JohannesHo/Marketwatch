@@ -8,13 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Marketwatch
-{
-    public partial class FormBuyItem : Form
-    {
+namespace Marketwatch {
+    public partial class FormBuyItem : Form {
         public PictureBox[] stickerBoxes { get; private set; } = new PictureBox[4];
-        public FormBuyItem()
-        {
+        public FormBuyItem() {
             InitializeComponent();
             stickerBoxes[0] = stickerPictureBox1;
             stickerBoxes[1] = stickerPictureBox2;

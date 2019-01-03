@@ -18,10 +18,8 @@ using System.Text;
 using System.Reflection;
 using UpdateLib;
 
-namespace Marketwatch
-{
-    public partial class FormMarketwatch : Form, ISharpUpdatable
-    {
+namespace Marketwatch {
+    public partial class FormMarketwatch : Form, ISharpUpdatable {
         public event EventHandler<ItemEventArgs> newItem;
 
         public ConcurrentDictionary<UInt64, UInt64> lookupDict = new ConcurrentDictionary<UInt64, UInt64>();
@@ -32,56 +30,43 @@ namespace Marketwatch
 
         public SharpUpdater updater;
 
-        public string ApplicationName
-        {
-            get
-            {
+        public string ApplicationName {
+            get {
                 return "Marketwatch";
             }
         }
 
-        public string ApplicationID
-        {
-            get
-            {
+        public string ApplicationID {
+            get {
                 return "Marketwatch";
             }
         }
 
-        public Assembly ApplicationAssembly
-        {
-            get
-            {
+        public Assembly ApplicationAssembly {
+            get {
                 return Assembly.GetExecutingAssembly();
             }
         }
 
-        public Icon ApplicationIcon
-        {
-            get
-            {
+        public Icon ApplicationIcon {
+            get {
                 return this.Icon;
             }
         }
 
-        public Uri UpdateXmlLocation
-        {
-            get
-            {
+        public Uri UpdateXmlLocation {
+            get {
                 return new Uri("http://marketwatch.mooo.com/update.xml");
             }
         }
 
-        public Form Context
-        {
-            get
-            {
+        public Form Context {
+            get {
                 return this;
             }
         }
 
-        public FormMarketwatch()
-        {
+        public FormMarketwatch() {
             InitializeComponent();
 
             DataGridViewTextBoxColumn itemColumnOld = (DataGridViewTextBoxColumn)dataGridView.Columns[itemNameColumn.Index];
@@ -106,15 +91,13 @@ namespace Marketwatch
             updater = new SharpUpdater(this);
         }
 
-        private void searchButton_Click(object sender, EventArgs e)
-        {
+        private void searchButton_Click(object sender, EventArgs e) {
             //For all Items
             //Old Regex
             //Match communityLink = Regex.Match(searchBox.Text, "^http://steamcommunity.com/market/listings/730/(?:(?<StatTrak>StatTrak)%E2%84%A2%20)?(?<Weapon>Glock-18|P250|Desert%20Eagle|Dual%20Berettas|Tec-9|CZ75%20Auto|R8%20Revolver|P2000|USP-S|Five-SeveN|Nova|XM1014|Sawed-Off|MAG-7|M249|Negev|MAC-10|MP7|UMP-45|PP-Bizon|P90|MP9|Galil%20AR|AK-47|SSG%2008|SG%20553|AWP|G3SG1|FAMAS|M4A4|M4A1-S|AUG|SCAR-20)%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20%28(?<Condition>Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred)%29$");
             //Match communityLink = Regex.Match(searchBox.Text, "^http://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>Glock-18|P250|Desert%20Eagle|Dual%20Berettas|Tec-9|CZ75%20Auto|R8%20Revolver|P2000|USP-S|Five-SeveN|Nova|XM1014|Sawed-Off|MAG-7|M249|Negev|MAC-10|MP7|UMP-45|PP-Bizon|P90|MP9|Galil%20AR|AK-47|SSG%2008|SG%20553|AWP|G3SG1|FAMAS|M4A4|M4A1-S|AUG|SCAR-20)|(?<Knife>Bayonet|Bowie%20Knife|Butterfly%20Knife|Falchion%20Knife|Flip%20Knife|Gut%20Knife|Huntsman%20Knife|Karambit|M9%20Bayonet|Shadow%20Daggers))(?:%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20%28(?<Condition>Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred)%29)?$");
             Match communityLink = Regex.Match(searchBox.Text, @"^https?://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>Glock-18|P250|Desert%20Eagle|Dual%20Berettas|Tec-9|CZ75%20Auto|R8%20Revolver|P2000|USP-S|Five-SeveN|Nova|XM1014|Sawed-Off|MAG-7|M249|Negev|MAC-10|MP7|UMP-45|PP-Bizon|P90|MP9|Galil%20AR|AK-47|SSG%2008|SG%20553|AWP|G3SG1|FAMAS|M4A4|M4A1-S|AUG|SCAR-20)|(?<Knife>Bayonet|Bowie%20Knife|Butterfly%20Knife|Falchion%20Knife|Flip%20Knife|Gut%20Knife|Huntsman%20Knife|Karambit|M9%20Bayonet|Shadow%20Daggers))(?(%20)(?:%20(?:%7C|\u007C)%20(?<Skin>[A-z,0-9,%,-]+)%20(?:%28|\u0028)(?<Condition>Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred)(?:%29|\u0029)))$");
-            if (communityLink.Success)
-            {
+            if (communityLink.Success) {
                 clear();
                 searchBox.Enabled = false;
 
@@ -130,30 +113,26 @@ namespace Marketwatch
                 for (UInt32 start = 0; (start < (searchResults_total / 100) + 1) && start < Properties.Settings.Default.maxRequest; start++)
                     prepareLinks.Add(searchBox.Text + "/render/?query=&start=" + start * 100 + "&count=100&currency=" + Properties.Settings.Default.currency);
 
+
                 List<Task> prepareTasks = new List<Task>();
                 ECurrencyCode currencyCode = (ECurrencyCode)Enum.Parse(typeof(ECurrencyCode), Properties.Settings.Default.currency.ToString());
                 foreach (String link in prepareLinks)
                     prepareTasks.Add(Task.Factory.StartNew(() => prepareLists(link, currencyCode)));
 
+
                 Task.WaitAll(prepareTasks.ToArray());
 
                 beginSubmittingRows();
-            }
-            else
-                MessageBox.Show(Resources.strings.FIX_LINK_MSGBOX_TEXT + "http://steamcommunity.com/market/listings/730/AK-47%20%7C%20Redline%20%28Minimal%20Wear%29", Resources.strings.FIX_LINK_MSGBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1); //TODO: localize
+            } else
+                MessageBox.Show(Resources.strings.FIX_LINK_MSGBOX_TEXT + "http://steamcommunity.com/market/listings/730/AK-47%20%7C%20Redline%20%28Minimal%20Wear%29", Resources.strings.FIX_LINK_MSGBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
         }
 
-        private void prepareLists(string link, ECurrencyCode currencyCode)
-        {
+        private void prepareLists(string link, ECurrencyCode currencyCode) {
             string jsonString;
-            using (WebClient wc = new WebClient())
-            {
-                try
-                {
+            using (WebClient wc = new WebClient()) {
+                try {
                     jsonString = wc.DownloadString(link);
-                }
-                catch (WebException ex)
-                {
+                } catch (WebException ex) {
                     Console.Error.WriteLine("Error getting data from steam. Error: " + ex.Message);
                     return;
                 }
@@ -165,8 +144,7 @@ namespace Marketwatch
             JToken listinginfo = root.GetValue("listinginfo");
             JToken assets = root.SelectToken(@"assets.730.2");
 
-            foreach (JToken info in listinginfo)
-            {
+            foreach (JToken info in listinginfo) {
                 Item item = new Item();
                 item.param_s = 0;
                 item.param_a = UInt64.Parse(info.First.SelectToken(@"asset").Value<String>("id"));
@@ -176,13 +154,11 @@ namespace Marketwatch
                 item.convertedPrice = info.First.Value<String>("converted_price");
                 item.convertedFee = info.First.Value<String>("converted_fee");
 
-                if (item.convertedPrice != null && item.convertedFee != null)
-                {
+                if (item.convertedPrice != null && item.convertedFee != null) {
                     item.convertedTotal = String.Format("{0}", UInt64.Parse(item.convertedPrice) + UInt64.Parse(item.convertedFee));
                     item.price = String.Format(Currency.GetCultureInfoByCurrencySymbol(currencyCode.ToString()), "{0:C}", UInt64.Parse(item.convertedTotal) / 100.0);
 
-                }
-                else
+                } else
                     item.price = Resources.strings.SOLD;
 
 
@@ -192,13 +168,11 @@ namespace Marketwatch
                     Console.Error.WriteLine("Could not add {0}", item);
             }
 
-            foreach (JToken asset in assets)
-            {
+            foreach (JToken asset in assets) {
                 UInt64 listingId = UInt64.Parse(Regex.Match(asset.First.SelectToken(@"market_actions[0]").Value<String>("link"), "(?!.*\\dM)(\\d+)(?=A)").Value);
 
                 Item item;
-                if (!items.TryRemove(listingId, out item))
-                {
+                if (!items.TryRemove(listingId, out item)) {
                     Console.Error.WriteLine("Could not remove item with listingId {0}", listingId);
                     continue;
                 }
@@ -212,12 +186,10 @@ namespace Marketwatch
 
                 //check for stickers
                 JToken stickers;
-                if ((stickers = asset.First.SelectToken(@"descriptions").Last) != null)
-                {
+                if ((stickers = asset.First.SelectToken(@"descriptions").Last) != null) {
                     string html_Sticker = stickers.Value<String>("value");
 
-                    if (!String.IsNullOrWhiteSpace(html_Sticker))
-                    {
+                    if (!String.IsNullOrWhiteSpace(html_Sticker)) {
                         item.name = item.name + " ( * )";
 
                         MatchCollection stickerURLs = Regex.Matches(html_Sticker, "(?<=src=\")[^ \"]*(?=\")");
@@ -227,8 +199,8 @@ namespace Marketwatch
                         item.stickerNames = Regex.Match(html_Sticker, "(?<=Sticker: ).*(?=</center>)").Value.Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
                     }
                 }
-                    
-                        
+
+
 
                 if (!items.TryAdd(item.param_m, item))
                     Console.Error.WriteLine("Could not readd {0}", item);
@@ -237,15 +209,13 @@ namespace Marketwatch
             HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
             doc.LoadHtml(results_html);
 
-            foreach (HtmlAgilityPack.HtmlNode accImageURL in doc.DocumentNode.SelectNodes("//span[@class='market_listing_owner_avatar']"))
-            {
+            foreach (HtmlAgilityPack.HtmlNode accImageURL in doc.DocumentNode.SelectNodes("//span[@class='market_listing_owner_avatar']")) {
 
                 string listingIdString = accImageURL.SelectSingleNode("../..//span[@class='market_listing_item_name']").GetAttributeValue("id", "");
                 UInt64 listingId = UInt64.Parse(Regex.Match(listingIdString, "(\\d+)(?!.*\\d)").Value);
 
                 Item item;
-                if (!items.TryRemove(listingId, out item))
-                {
+                if (!items.TryRemove(listingId, out item)) {
                     Console.Error.WriteLine("Could not remove item with listingId {0}", listingId);
                     continue;
                 }
@@ -256,14 +226,12 @@ namespace Marketwatch
                     Console.Error.WriteLine("Could not readd {0}", item);
             }
 
-            foreach (HtmlAgilityPack.HtmlNode previewImageURL in doc.DocumentNode.SelectNodes("//div[@class='market_listing_item_img_container']/img"))
-            {
+            foreach (HtmlAgilityPack.HtmlNode previewImageURL in doc.DocumentNode.SelectNodes("//div[@class='market_listing_item_img_container']/img")) {
                 string listingIdString = previewImageURL.GetAttributeValue("id", "");
                 UInt64 listingId = UInt64.Parse(Regex.Match(listingIdString, "\\d+").Value);
 
                 Item item;
-                if (!items.TryRemove(listingId, out item))
-                {
+                if (!items.TryRemove(listingId, out item)) {
                     Console.Error.WriteLine("Could not remove item with listingId {0}", listingId);
                     continue;
                 }
@@ -277,32 +245,22 @@ namespace Marketwatch
             }
         }
 
-        private void beginSubmittingRows()
-        {
+        private void beginSubmittingRows() {
             foreach (KeyValuePair<UInt64, Item> pair in items)
-            {
-                EventHandler<ItemEventArgs> handler = newItem;
-
-                if (handler != null)
-                    handler(this, new ItemEventArgs(pair.Value));
-
-            }
+                newItem?.Invoke(this, new ItemEventArgs(pair.Value));
         }
 
-        private async void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-            if (((DataGridView)sender).Columns[e.ColumnIndex].GetType() == typeof(DataGridViewButtonColumn))
-            {
+        private async void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+            if (((DataGridView)sender).Columns[e.ColumnIndex].GetType() == typeof(DataGridViewButtonColumn)) {
                 Object link = ((DataGridView)sender).Rows[e.RowIndex].Cells[e.ColumnIndex + 2].Value;
                 if (link == null)
                     return;
-                if (e.ColumnIndex + 2 == inspectLinkColumn.Index)
+                if (e.ColumnIndex + 2 == inspectLinkColumn.Index) {
                     if (Marketwatch.isDebug)
                         Clipboard.SetText(link.ToString());
                     else
                         Process.Start(link.ToString());
-                else if (e.ColumnIndex + 2 == buyLinkColumn.Index)
-                {
+                } else if (e.ColumnIndex + 2 == buyLinkColumn.Index) {
                     UInt64 listingId = UInt64.Parse(Regex.Match(link.ToString(), "(\\d{2,})(?=',)").Value);
                     Item item;
                     if (!items.TryGetValue(listingId, out item) || item.price.Equals(Resources.strings.SOLD))
@@ -316,8 +274,7 @@ namespace Marketwatch
                     data.Add("total", item.convertedTotal);
                     data.Add("quantity", "1");
 
-                    using (FormBuyItem dialog = new FormBuyItem())
-                    {
+                    using (FormBuyItem dialog = new FormBuyItem()) {
                         string currencySymbol = Enum.GetName(typeof(ECurrencyCode), Properties.Settings.Default.currency);
                         dialog.previewPictureBox.Load(item.previewHighResolutionImageURL);
                         dialog.sellerPictureBox.Image = await item.ownerImage;
@@ -325,21 +282,19 @@ namespace Marketwatch
                         dialog.labelFees.Text = String.Format(Currency.GetCultureInfoByCurrencySymbol(currencySymbol), "{0:C}", UInt64.Parse(item.convertedFee) / 100.0);
                         dialog.labelTotal.Text = item.price;
 
-                        for(int i = 0; i < item.stickerImages.Count; i++)
-                        {
+                        for (int i = 0; i < item.stickerImages.Count; i++) {
                             dialog.toolTip.SetToolTip(dialog.stickerBoxes[i], item.stickerNames[i]);
                             dialog.stickerBoxes[i].Image = await item.stickerImages[i];
                             dialog.stickerBoxes[i].Visible = true;
                         }
-                            
+
 
                         NumberFormatInfo numberFormatInfo = Currency.GetCultureInfoByCurrencySymbol(currencySymbol).NumberFormat;
 
                         Decimal price = Decimal.Parse(item.price, NumberStyles.Currency, numberFormatInfo);
                         Decimal balance = Decimal.Parse(this.walletAmount.Text, NumberStyles.Currency, numberFormatInfo);
 
-                        if (price > balance)
-                        {
+                        if (price > balance) {
                             dialog.purchaseButton.Enabled = false;
                             dialog.labelInsufficientFunds.Visible = true;
                             dialog.pictureBoxWarning.Visible = true;
@@ -356,61 +311,50 @@ namespace Marketwatch
             }
         }
 
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e) {
             dataGridView.ClearSelection();
         }
 
-        private void clearButton_Click(object sender, EventArgs e)
-        {
+        private void clearButton_Click(object sender, EventArgs e) {
             clear();
         }
 
-        private void clear()
-        {
+        private void clear() {
             dataGridView.Rows.Clear();
             lookupDict.Clear();
             items.Clear();
             steamWorker.itemQueue.Clear();
-            labelSeparator.Visible = false; 
+            labelSeparator.Visible = false;
             labelCurrent.Text = "";
             labelTotal.Text = "";
             searchBox.Enabled = true;
         }
 
-        private void searchButton_EnabledChanged(object sender, EventArgs e)
-        {
+        private void searchButton_EnabledChanged(object sender, EventArgs e) {
             clearButton.Enabled = !clearButton.Enabled;
         }
 
-        private async Task<Image> getImageFromURL(String url)
-        {
-            using (WebClient webClient = new WebClient())
-            {
+        private async Task<Image> getImageFromURL(String url) {
+            using (WebClient webClient = new WebClient()) {
                 byte[] data = await webClient.DownloadDataTaskAsync(new Uri(url));
 
-                using (MemoryStream mem = new MemoryStream(data))
-                {
+                using (MemoryStream mem = new MemoryStream(data)) {
                     return Image.FromStream(mem);
                 }
             }
         }
 
-        private void settingsButton_Click(object sender, EventArgs e)
-        {
+        private void settingsButton_Click(object sender, EventArgs e) {
             new FormSettings().Show();
         }
 
-        private void dataGridView_SortCompare(object sender, DataGridViewSortCompareEventArgs e)
-        {
-            if (e.Column == priceColumn)
-            {
+        private void dataGridView_SortCompare(object sender, DataGridViewSortCompareEventArgs e) {
+            if (e.Column == priceColumn) {
                 if (e.CellValue1.ToString().Equals(Resources.strings.SOLD))
                     e.SortResult = 1;
                 else if (e.CellValue2.ToString().Equals(Resources.strings.SOLD))
                     e.SortResult = -1;
-                else
-                {
+                else {
                     NumberFormatInfo numberFormatInfo = Currency.GetCultureInfoByCurrencySymbol(Enum.GetName(typeof(ECurrencyCode), Properties.Settings.Default.currency)).NumberFormat;
                     Decimal cell1 = Decimal.Parse(e.CellValue1.ToString(), NumberStyles.Currency, numberFormatInfo);
                     Decimal cell2 = Decimal.Parse(e.CellValue2.ToString(), NumberStyles.Currency, numberFormatInfo);
@@ -422,66 +366,51 @@ namespace Marketwatch
             }
         }
 
-        private void MarketwatchForm_FormClosed(object sender, FormClosedEventArgs e)
-        {
+        private void MarketwatchForm_FormClosed(object sender, FormClosedEventArgs e) {
             Environment.Exit(0);
         }
 
-        private void donateButton_Click(object sender, EventArgs e)
-        {
-            if (steamWorker != null && steamWorker.isSteamWebReady)
-            {
+        private void donateButton_Click(object sender, EventArgs e) {
+            if (steamWorker != null && steamWorker.isSteamWebReady) {
                 FormWeb webForm = new FormWeb(steamWorker.steamWeb);
                 webForm.webBrowser.Navigate("https://steamcommunity.com/tradeoffer/new/?partner=44396159&token=PAn2liAp", "_self", null, "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/31.0.1650.57 Safari/537.36");
-            }
-            else
+            } else
                 MessageBox.Show(Resources.strings.LOGIN_MSGBOX_TEXT, Resources.strings.LOGIN_MSGBOX_CAPTION, MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1); //TODO: localize
         }
 
-        private void donateButton_MouseEnter(object sender, EventArgs e)
-        {
+        private void donateButton_MouseEnter(object sender, EventArgs e) {
             donateButton.BackgroundImage = Properties.Resources.steamDonateLowResMirror2;
         }
 
-        private void donateButton_MouseLeave(object sender, EventArgs e)
-        {
+        private void donateButton_MouseLeave(object sender, EventArgs e) {
             donateButton.BackgroundImage = Properties.Resources.steamDonateLowResMirror1;
         }
 
-        private void beendenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void beendenToolStripMenuItem_Click(object sender, EventArgs e) {
             Environment.Exit(0);
         }
 
-        private void infoToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void infoToolStripMenuItem_Click(object sender, EventArgs e) {
             new FormAbout().Show();
         }
 
-        private void optionenToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void optionenToolStripMenuItem_Click(object sender, EventArgs e) {
             new FormSettings().Show();
         }
 
-        private void FormMarketwatch_Load(object sender, EventArgs e)
-        {
+        private void FormMarketwatch_Load(object sender, EventArgs e) {
             String user = "", pass = "";
 
-            if (Properties.Settings.Default.rememberLogin != true)
-            {
-                using (FormLogin dialog = new FormLogin())
-                {
+            if (Properties.Settings.Default.rememberLogin != true) {
+                using (FormLogin dialog = new FormLogin()) {
                     DialogResult result = dialog.ShowDialog();
 
-                    if (result == DialogResult.OK)
-                    {
+                    if (result == DialogResult.OK) {
                         user = dialog.user;
                         pass = dialog.pass;
                     }
                 }
-            }
-            else
-            {
+            } else {
                 Byte[] entropy = Convert.FromBase64String(Properties.Settings.Default.entropy);
                 Byte[] passEncrypted = Convert.FromBase64String(Properties.Settings.Default.passwordEncrypted);
 
@@ -497,8 +426,7 @@ namespace Marketwatch
             worker.Start();
         }
 
-        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e) {
             loginToolStripMenuItem.Enabled = true;
             logoutToolStripMenuItem.Enabled = false;
 
@@ -514,16 +442,13 @@ namespace Marketwatch
             Properties.Settings.Default.Save();
         }
 
-        private void loginToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void loginToolStripMenuItem_Click(object sender, EventArgs e) {
             String user = "", pass = "";
 
-            using (FormLogin dialog = new FormLogin())
-            {
+            using (FormLogin dialog = new FormLogin()) {
                 DialogResult result = dialog.ShowDialog();
 
-                if (result == DialogResult.OK)
-                {
+                if (result == DialogResult.OK) {
                     user = dialog.user;
                     pass = dialog.pass;
                 }
@@ -537,46 +462,37 @@ namespace Marketwatch
 
         }
 
-        private void officialGroupToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void officialGroupToolStripMenuItem_Click(object sender, EventArgs e) {
             Process.Start("http://steamcommunity.com/groups/marketwatch-official#");
         }
 
-        private void releaseNotesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void releaseNotesToolStripMenuItem_Click(object sender, EventArgs e) {
             new FormPatchnotes(this).Show();
         }
 
-        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+        private void checkForUpdateToolStripMenuItem_Click(object sender, EventArgs e) {
             updater.DoUpdate();
         }
 
-        private void FormMarketwatch_Shown(object sender, EventArgs e)
-        {
+        private void FormMarketwatch_Shown(object sender, EventArgs e) {
             if (Properties.Settings.Default.autoUpdate)
                 updater.DoUpdate();
         }
     }
 
 
-    public class ItemEventArgs : EventArgs
-    {
+    public class ItemEventArgs : EventArgs {
         public Item item;
-        public ItemEventArgs(Item item)
-        {
+        public ItemEventArgs(Item item) {
             this.item = item;
         }
     }
 
-    public class ToolStripRenderer : ToolStripSystemRenderer
-    {
-        public ToolStripRenderer()
-        {
+    public class ToolStripRenderer : ToolStripSystemRenderer {
+        public ToolStripRenderer() {
         }
 
-        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
-        {
+        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e) {
             if (!(e.ToolStrip.GetType() == typeof(MenuStrip)))
                 base.OnRenderToolStripBorder(e);
         }
