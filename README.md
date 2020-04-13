@@ -6,5 +6,6 @@ A Login to an account with CS:GO is needed for checking of Floats. An Free2Play 
 Example Search for a Minimal Wear M4A1-S Knight
 ![Login](http://marketwatch.mooo.com/Marketwatch/MarketwatchMain.png)
 
-Purchase Menu
+Example of the Purchase Menu
+
 ![Login](http://marketwatch.mooo.com/Marketwatch/MarketwatchBuy.png)
