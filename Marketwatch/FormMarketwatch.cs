@@ -93,10 +93,15 @@ namespace Marketwatch {
 
         private void searchButton_Click(object sender, EventArgs e) {
             //For all Items
-            //Old Regex
-            //Match communityLink = Regex.Match(searchBox.Text, "^http://steamcommunity.com/market/listings/730/(?:(?<StatTrak>StatTrak)%E2%84%A2%20)?(?<Weapon>Glock-18|P250|Desert%20Eagle|Dual%20Berettas|Tec-9|CZ75%20Auto|R8%20Revolver|P2000|USP-S|Five-SeveN|Nova|XM1014|Sawed-Off|MAG-7|M249|Negev|MAC-10|MP7|UMP-45|PP-Bizon|P90|MP9|Galil%20AR|AK-47|SSG%2008|SG%20553|AWP|G3SG1|FAMAS|M4A4|M4A1-S|AUG|SCAR-20)%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20%28(?<Condition>Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred)%29$");
-            //Match communityLink = Regex.Match(searchBox.Text, "^http://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>Glock-18|P250|Desert%20Eagle|Dual%20Berettas|Tec-9|CZ75%20Auto|R8%20Revolver|P2000|USP-S|Five-SeveN|Nova|XM1014|Sawed-Off|MAG-7|M249|Negev|MAC-10|MP7|UMP-45|PP-Bizon|P90|MP9|Galil%20AR|AK-47|SSG%2008|SG%20553|AWP|G3SG1|FAMAS|M4A4|M4A1-S|AUG|SCAR-20)|(?<Knife>Bayonet|Bowie%20Knife|Butterfly%20Knife|Falchion%20Knife|Flip%20Knife|Gut%20Knife|Huntsman%20Knife|Karambit|M9%20Bayonet|Shadow%20Daggers))(?:%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20%28(?<Condition>Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred)%29)?$");
-            Match communityLink = Regex.Match(searchBox.Text, @"^https?://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>Glock-18|P250|Desert%20Eagle|Dual%20Berettas|Tec-9|CZ75%20Auto|R8%20Revolver|P2000|USP-S|Five-SeveN|Nova|XM1014|Sawed-Off|MAG-7|M249|Negev|MAC-10|MP7|UMP-45|PP-Bizon|P90|MP9|Galil%20AR|AK-47|SSG%2008|SG%20553|AWP|G3SG1|FAMAS|M4A4|M4A1-S|AUG|SCAR-20)|(?<Knife>Bayonet|Bowie%20Knife|Butterfly%20Knife|Falchion%20Knife|Flip%20Knife|Gut%20Knife|Huntsman%20Knife|Karambit|M9%20Bayonet|Shadow%20Daggers))(?(%20)(?:%20(?:%7C|\u007C)%20(?<Skin>[A-z,0-9,%,-]+)%20(?:%28|\u0028)(?<Condition>Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred)(?:%29|\u0029)))$");
+            String Pistols = "CZ75%20Auto|Desert%20Eagle|Dual%20Berettas|Five-SeveN|Glock-18|P2000|P250|R8%20Revolver|Tec-9|USP-S";
+            String Rifles = "AK-47|AUG|AWP|FAMAS|G3SG1|Galil%20AR|M4A1-S|M4A4|SCAR-20|SG%20553|SSG%2008";
+            String SMGs = "MAC-10|MP5-SD|MP7|MP9|PP-Bizon|P90|UMP-45";
+            String Heavy = "MAG-7|Nova|Sawed-Off|XM1014|M249|Negev";
+            String Weapons = Pistols + "|" + Rifles + "|" + SMGs + "|" + Heavy;
+            String Knifes = "Bayonet|Bowie%20Knife|Butterfly%20Knife|Falchion%20Knife|Flip%20Knife|Gut%20Knife|Huntsman%20Knife|Karambit|M9%20Bayonet|Shadow%20Daggers|Navaja%20Knife|Stiletto%20Knife|Ursus%20Knife|Talon%20Knife|Classic%20Knife|Nomad%20Knife|Survival%20Knife|Paracord%20Knife|Skeleton%20Knife";
+            String Conditions = "Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred";
+
+            Match communityLink = Regex.Match(searchBox.Text, @"^https?://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>" + Weapons + ")|(?<Knife>" + Knifes + "))(?(%20)(?:%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20(?:%28|\\()(?<Condition>" + Conditions + ")(?:%29|\\))))$");
             if (communityLink.Success) {
                 clear();
                 searchBox.Enabled = false;
@@ -258,8 +263,7 @@ namespace Marketwatch {
                 if (e.ColumnIndex + 2 == inspectLinkColumn.Index) {
                     if (Marketwatch.isDebug)
                         Clipboard.SetText(link.ToString());
-                    else
-                        Process.Start(link.ToString());
+                    Process.Start(link.ToString());
                 } else if (e.ColumnIndex + 2 == buyLinkColumn.Index) {
                     UInt64 listingId = UInt64.Parse(Regex.Match(link.ToString(), "(\\d{2,})(?=',)").Value);
                     Item item;
@@ -295,7 +299,8 @@ namespace Marketwatch {
                         Decimal balance = Decimal.Parse(this.walletAmount.Text, NumberStyles.Currency, numberFormatInfo);
 
                         if (price > balance) {
-                            dialog.purchaseButton.Enabled = false;
+                            if (!Marketwatch.isDebug)
+                                dialog.purchaseButton.Enabled = false;
                             dialog.labelInsufficientFunds.Visible = true;
                             dialog.pictureBoxWarning.Visible = true;
                         }
@@ -304,7 +309,10 @@ namespace Marketwatch {
                         DialogResult result = dialog.ShowDialog();
 
                         if (result == DialogResult.OK)
-                            steamWorker.steamWeb.Fetch(url: "https://steamcommunity.com/market/buylisting/" + listingId, method: "POST", data: data, referer: searchBox.Text);
+                            if (Marketwatch.isDebug)
+                                Clipboard.SetText("BuyMarketListing('listing', '" + item.param_m + "', 730, '2', '" + item.param_a + "')");
+                            else
+                                steamWorker.steamWeb.Fetch(url: "https://steamcommunity.com/market/buylisting/" + item.param_m, method: "POST", data: data, referer: searchBox.Text);
                     }
                 }
 
@@ -336,11 +344,17 @@ namespace Marketwatch {
 
         private async Task<Image> getImageFromURL(String url) {
             using (WebClient webClient = new WebClient()) {
-                byte[] data = await webClient.DownloadDataTaskAsync(new Uri(url));
+                try {
+                    byte[] data = await webClient.DownloadDataTaskAsync(new Uri(url));
 
-                using (MemoryStream mem = new MemoryStream(data)) {
-                    return Image.FromStream(mem);
+                    using (MemoryStream mem = new MemoryStream(data)) {
+                        return Image.FromStream(mem);
+                    }
+                } catch {
+                    //Something went wrong with getting the image use a error one insteed
+                    return Properties.Resources.messagebox_warning;
                 }
+
             }
         }
 
