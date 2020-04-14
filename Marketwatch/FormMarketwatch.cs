@@ -99,9 +99,10 @@ namespace Marketwatch {
             String Heavy = "MAG-7|Nova|Sawed-Off|XM1014|M249|Negev";
             String Weapons = Pistols + "|" + Rifles + "|" + SMGs + "|" + Heavy;
             String Knifes = "Bayonet|Bowie%20Knife|Butterfly%20Knife|Falchion%20Knife|Flip%20Knife|Gut%20Knife|Huntsman%20Knife|Karambit|M9%20Bayonet|Shadow%20Daggers|Navaja%20Knife|Stiletto%20Knife|Ursus%20Knife|Talon%20Knife|Classic%20Knife|Nomad%20Knife|Survival%20Knife|Paracord%20Knife|Skeleton%20Knife";
+            String Gloves = "Bloodhound%20Gloves|Driver%20Gloves|Hand%20Wraps|Hydra%20Gloves|Moto%20Gloves|Specialist%20Gloves|Sport%20Gloves";
             String Conditions = "Factory%20New|Minimal%20Wear|Field-Tested|Well-Worn|Battle-Scarred";
 
-            Match communityLink = Regex.Match(searchBox.Text, @"^https?://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>" + Weapons + ")|(?<Knife>" + Knifes + "))(?(%20)(?:%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20(?:%28|\\()(?<Condition>" + Conditions + ")(?:%29|\\))))$");
+            Match communityLink = Regex.Match(searchBox.Text, @"^https?://steamcommunity.com/market/listings/730/(?:%E2%98%85%20)?(?:(?<Modifier>StatTrak%E2%84%A2|Souvenir)%20)?(?:(?<Weapon>" + Weapons + ")|(?<Knife>" + Knifes + ")|(?<Glove>" + Gloves + "))(?(%20)(?:%20(?:%7C|\\|)%20(?<Skin>[A-z,0-9,%,-]+)%20(?:%28|\\()(?<Condition>" + Conditions + ")(?:%29|\\))))$");
             if (communityLink.Success) {
                 clear();
                 searchBox.Enabled = false;
