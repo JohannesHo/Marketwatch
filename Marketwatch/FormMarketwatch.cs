@@ -184,9 +184,10 @@ namespace Marketwatch {
 
                 //set name if there is a custom one use it else the std item name
                 JToken nameTag;
-                if ((nameTag = asset.First.SelectToken(@"fraudwarnings[0]")) != null)
+                if ((nameTag = asset.First.SelectToken(@"fraudwarnings[0]")) != null) {
                     item.name = Regex.Match(nameTag.ToString().Replace("''", "\""), "\".*\"$").Value;
-                else
+                    item.hasNameTag = true;
+                } else
                     item.name = asset.First.Value<String>("name");
 
                 //check for stickers
@@ -285,12 +286,20 @@ namespace Marketwatch {
                         dialog.labelItemPrice.Text = String.Format(Currency.GetCultureInfoByCurrencySymbol(currencySymbol), "{0:C}", UInt64.Parse(item.convertedPrice) / 100.0);
                         dialog.labelFees.Text = String.Format(Currency.GetCultureInfoByCurrencySymbol(currencySymbol), "{0:C}", UInt64.Parse(item.convertedFee) / 100.0);
                         dialog.labelTotal.Text = item.price;
+                        dialog.labelFloatValue.Text = item.floatValue.ToString();
+
+                        string displayName;
+                        //remove " (*) as its not part of the name and indicates stickers
+                        if (item.name.Contains("( * )"))
+                            displayName = item.name.Remove(item.name.LastIndexOf('"') + 1);
+                        else
+                            displayName = item.name;
+
+                        dialog.labelDisplayName.Text = displayName;
 
                         for (int i = 0; i < item.stickerImages.Count; i++) {
                             dialog.toolTip.SetToolTip(dialog.stickerBoxes[i], item.stickerNames[i]);
                             dialog.stickerBoxes[i].Image = await item.stickerImages[i];
-                            dialog.stickerBoxes[i].Visible = true;
-                            dialog.stickerLabel.Visible = true;
                         }
 
 

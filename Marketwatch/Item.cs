@@ -19,6 +19,7 @@ namespace Marketwatch {
 
         public Task<Image> ownerImage { get; set; }
         public Task<Image> previewImage { get; set; }
+        public bool hasNameTag { get; internal set; }
         public double floatValue { get; set; }
         public string pattern { get; private set; }
         public string price { get; set; }
@@ -70,8 +71,12 @@ namespace Marketwatch {
             }
         }
 
-        public static Item newItemFromURL(String url) {
+      public static Item newItemFromURL(String url) {
             Item item = new Item();
+
+            //set default to false
+            item.hasNameTag = false;
+
             Match match = Regex.Match(url, "(?:S(?<param_s>[0-9]+)|M(?<param_m>[0-9]+))A(?<param_a>[0-9]+)D(?<param_d>[0-9]+)");
 
             item.param_s = match.Groups["param_s"].Success ? UInt64.Parse(match.Groups["param_s"].Value) : 0;

@@ -51,6 +51,10 @@
             this.stickerPictureBox2 = new System.Windows.Forms.PictureBox();
             this.stickerPictureBox1 = new System.Windows.Forms.PictureBox();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.labelDisplayName = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.labelFloatValue = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBoxWarning)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.sellerPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
@@ -203,10 +207,34 @@
             this.toolTip.InitialDelay = 250;
             this.toolTip.ReshowDelay = 0;
             // 
+            // labelDisplayName
+            // 
+            resources.ApplyResources(this.labelDisplayName, "labelDisplayName");
+            this.labelDisplayName.Name = "labelDisplayName";
+            // 
+            // label7
+            // 
+            resources.ApplyResources(this.label7, "label7");
+            this.label7.Name = "label7";
+            // 
+            // labelFloatValue
+            // 
+            resources.ApplyResources(this.labelFloatValue, "labelFloatValue");
+            this.labelFloatValue.Name = "labelFloatValue";
+            // 
+            // label6
+            // 
+            resources.ApplyResources(this.label6, "label6");
+            this.label6.Name = "label6";
+            // 
             // FormBuyItem
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.Controls.Add(this.labelFloatValue);
+            this.Controls.Add(this.label6);
+            this.Controls.Add(this.labelDisplayName);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.stickerLabel);
             this.Controls.Add(this.stickerPictureBox4);
             this.Controls.Add(this.stickerPictureBox3);
@@ -227,6 +255,7 @@
             this.Controls.Add(this.purchaseButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.previewPictureBox);
+            this.Cursor = System.Windows.Forms.Cursors.Default;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FormBuyItem";
@@ -265,5 +294,9 @@
         public System.Windows.Forms.PictureBox stickerPictureBox1;
         public System.Windows.Forms.ToolTip toolTip;
         public System.Windows.Forms.Label stickerLabel;
+        public System.Windows.Forms.Label labelDisplayName;
+        public System.Windows.Forms.Label label7;
+        public System.Windows.Forms.Label labelFloatValue;
+        private System.Windows.Forms.Label label6;
     }
 }

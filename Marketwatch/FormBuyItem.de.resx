@@ -564,6 +564,30 @@
   <data name="stickerPictureBox1.ToolTip" xml:space="preserve">
     <value />
   </data>
+  <data name="labelNameTag2.Text" xml:space="preserve">
+    <value>Platzhalter</value>
+  </data>
+  <data name="labelNameTag2.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="labelNameTag1.Size" type="System.Drawing.Size, System.Drawing">
+    <value>74, 13</value>
+  </data>
+  <data name="labelNameTag1.Text" xml:space="preserve">
+    <value>Anzeigename:</value>
+  </data>
+  <data name="labelNameTag1.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="labelFloatValue.Text" xml:space="preserve">
+    <value>Platzhalter</value>
+  </data>
+  <data name="labelFloatValue.ToolTip" xml:space="preserve">
+    <value />
+  </data>
+  <data name="label6.ToolTip" xml:space="preserve">
+    <value />
+  </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         AAABAAsAAAAAAAEAIACcZAEAtgAAAAAAAAABACAA8nEAAFJlAQCAgAAAAQAgACgIAQBE1wEAYGAAAAEA
