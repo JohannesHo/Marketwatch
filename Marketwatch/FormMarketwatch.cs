@@ -290,6 +290,7 @@ namespace Marketwatch {
                             dialog.toolTip.SetToolTip(dialog.stickerBoxes[i], item.stickerNames[i]);
                             dialog.stickerBoxes[i].Image = await item.stickerImages[i];
                             dialog.stickerBoxes[i].Visible = true;
+                            dialog.stickerLabel.Visible = true;
                         }
 
 
