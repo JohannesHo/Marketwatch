@@ -9,4 +9,4 @@ __Example Search for a Minimal Wear M4A1-S Knight__
 
 __Example of the Purchase Menu__
 
-![PurchaseWindow](http://marketwatch.mooo.com/Marketwatch/MarketwatchBuy.png)
+![PurchaseWindow](http://marketwatch.mooo.com/Marketwatch/MarketwatchPurchase.png)
