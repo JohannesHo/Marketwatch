@@ -42,6 +42,7 @@
             // 
             resources.ApplyResources(this.passBox, "passBox");
             this.passBox.Name = "passBox";
+            this.passBox.KeyDown += new System.Windows.Forms.KeyEventHandler(this.passBox_KeyDown);
             // 
             // accBox
             // 

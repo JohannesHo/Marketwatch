@@ -2,12 +2,19 @@
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace Marketwatch {
     public partial class FormLogin : Form {
         public string user, pass;
         public FormLogin() {
             InitializeComponent();
+        }
+
+        private void passBox_KeyDown(object sender, KeyEventArgs e) {
+            if (e.KeyCode == Keys.Enter) {
+                loginButton.PerformClick();
+            }
         }
 
         private void loginButton_Click(object sender, EventArgs e) {
