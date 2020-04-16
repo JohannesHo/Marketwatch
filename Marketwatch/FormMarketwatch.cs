@@ -322,11 +322,20 @@ namespace Marketwatch {
                         if (result == DialogResult.OK)
                             if (Marketwatch.isDebug)
                                 Clipboard.SetText("BuyMarketListing('listing', '" + item.param_m + "', 730, '2', '" + item.param_a + "')");
-                            else
-                                steamWorker.steamWeb.Fetch(url: "https://steamcommunity.com/market/buylisting/" + item.param_m, method: "POST", data: data, referer: searchBox.Text);
+                            else {
+                                string response = steamWorker.steamWeb.Fetch(url: "https://steamcommunity.com/market/buylisting/" + item.param_m, method: "POST", data: data, referer: searchBox.Text);
+                                try {
+                                     JToken jsonResponse = JToken.Parse(response);
+                                    int responseCode = jsonResponse.SelectToken(@"wallet_info.success").Value<int>();
+                                    if (responseCode == 1)
+                                        MessageBox.Show("Successfully purchased skin.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                } catch (Exception ex) {
+                                    Console.WriteLine(response);
+                                }
+                            }
                     }
                 }
-
+                 
             }
         }
 
