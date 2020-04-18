@@ -161,6 +161,12 @@ Beispiel: </value>
   <data name="OK" xml:space="preserve">
     <value>OK</value>
   </data>
+  <data name="PURCHASE_SUCCESS_POST" xml:space="preserve">
+    <value>" wurde erfolgreich gekauft.</value>
+  </data>
+  <data name="PURCHASE_SUCCESS_PRE" xml:space="preserve">
+    <value>"</value>
+  </data>
   <data name="SOLD" xml:space="preserve">
     <value>Verkauft!</value>
   </data>

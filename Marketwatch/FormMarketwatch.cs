@@ -318,21 +318,30 @@ namespace Marketwatch {
 
 
                         DialogResult result = dialog.ShowDialog();
-
-                        if (result == DialogResult.OK)
+                        if (result == DialogResult.OK) {
                             if (Marketwatch.isDebug)
                                 Clipboard.SetText("BuyMarketListing('listing', '" + item.param_m + "', 730, '2', '" + item.param_a + "')");
                             else {
-                                string response = steamWorker.steamWeb.Fetch(url: "https://steamcommunity.com/market/buylisting/" + item.param_m, method: "POST", data: data, referer: searchBox.Text);
+                                string response = steamWorker.steamWeb.Fetch(url: "https://steamcommunity.com/market/buylisting/" + item.param_m, method: "POST", data: data, referer: searchBox.Text, fetchError: true);
                                 try {
-                                     JToken jsonResponse = JToken.Parse(response);
-                                    int responseCode = jsonResponse.SelectToken(@"wallet_info.success").Value<int>();
-                                    if (responseCode == 1)
-                                        MessageBox.Show("Successfully purchased skin.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    JToken jsonResponse = JToken.Parse(response);
+                                    
+                                    JToken success = jsonResponse.SelectToken(@"wallet_info.success");
+                                    JToken message = jsonResponse.SelectToken(@"message");
+
+                                    if (success != null && success.Value<int>() == 1) {
+                                        MessageBox.Show(Resources.strings.PURCHASE_SUCCESS_PRE + displayName + Resources.strings.PURCHASE_SUCCESS_POST, "Marketwatch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    } 
+                                    if (message != null) {
+                                        MessageBox.Show(message.Value<string>(), "Marketwatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                    }
+
                                 } catch (Exception ex) {
+                                    Console.WriteLine(ex.StackTrace);
                                     Console.WriteLine(response);
                                 }
                             }
+                        }
                     }
                 }
                  
