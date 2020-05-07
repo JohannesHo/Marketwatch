@@ -35,34 +35,60 @@ namespace Marketwatch {
             get { return _paintIndex; }
             set {
                 switch (value) {
-                    case 415:
+                    // Ruby
+                    case 415: // Default - Doppler
                         pattern = "Ruby";
                         break;
-                    case 416:
+
+                    // Sapphire
+                    case 416: // Default - Doppler
+                    case 619: // Butterfly-Knife - Doppler
+                              // Shadow-Daggers - Doppler
                         pattern = "Sapphire";
                         break;
-                    case 417:
+
+                    case 417: // Default - Doppler
+                    case 617: // Butterfly-Knife - Doppler
+                              // Shadow-Daggers - Doppler
                         pattern = "Black Pearl";
                         break;
-                    case 568:
+
+                    // Emerald
+                    case 568: // Default - Gamma Doppler
                         pattern = "Emerald";
                         break;
-                    case 418:
-                    case 569:
+
+                    // Phase 1
+                    case 418: // Default - Doppler
+                    case 569: // Default - Gamma Doppler
+                    case 852: // Talon-Knife - Doppler
                         pattern = "Phase 1";
                         break;
-                    case 419:
-                    case 570:
+
+                    // Phase 2
+                    case 419: // Default - Doppler
+                    case 570: // Default - Gamma Doppler
+                    case 618: // Butterfly-Knife - Doppler
+                              // Shadow-Daggers - Doppler
+                    case 853: // Talon-Knife - Doppler
                         pattern = "Phase 2";
                         break;
-                    case 420:
-                    case 571:
+
+                    // Phase 3
+                    case 420: // Default - Doppler
+                    case 571: // Default - Gamma Doppler
+                    case 854: // Talon-Knife - Doppler
                         pattern = "Phase 3";
                         break;
-                    case 572:
-                    case 421:
+
+                    // Phase 4
+                    case 421: // Default - Doppler
+                    case 572: // Default - Gamma Doppler
+                    case 855: // Talon-Knife - Doppler
                         pattern = "Phase 4";
                         break;
+
+                    // All Other Skins
                     default:
                         pattern = null;
                         break;
