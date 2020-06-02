@@ -20,6 +20,7 @@ namespace Marketwatch {
         public Task<Image> ownerImage { get; set; }
         public Task<Image> previewImage { get; set; }
         public bool hasNameTag { get; internal set; }
+        public bool hasStickers { get; internal set; }
         public double floatValue { get; set; }
         public string pattern { get; private set; }
         public string price { get; set; }
@@ -102,6 +103,7 @@ namespace Marketwatch {
 
             //set default to false
             item.hasNameTag = false;
+            item.hasStickers = false;
 
             Match match = Regex.Match(url, "(?:S(?<param_s>[0-9]+)|M(?<param_m>[0-9]+))A(?<param_a>[0-9]+)D(?<param_d>[0-9]+)");
 
@@ -134,6 +136,9 @@ namespace Marketwatch {
                 nameCell.Value = @"{\rtf1\ansi\ansicpg1252\deff0\deflang1031{\fonttbl{\f0\fnil\fcharset0 Microsoft Sans Serif; } }\viewkind4\uc1\pard\f0\fs17\up0 " + this.name.Replace("★", @"\u9733?") + @" \up6\fs13 " + this.pattern + @"\up0\par}";
             else
                 nameCell.Value = this.name;
+
+            if (this.hasStickers)
+                nameCell.Value = nameCell.Value + " ( * )";
 
             //row.Cells[dataGridViewAsTemplate.Columns["itemNameColumn"].Index] = nameCell;
 

@@ -197,7 +197,7 @@ namespace Marketwatch {
                     string html_Sticker = stickers.Value<String>("value");
 
                     if (!String.IsNullOrWhiteSpace(html_Sticker)) {
-                        item.name = item.name + " ( * )";
+                        item.hasStickers = true;
 
                         MatchCollection stickerURLs = Regex.Matches(html_Sticker, "(?<=src=\")[^ \"]*(?=\")");
                         foreach (Match stickerURL in stickerURLs)
@@ -289,14 +289,7 @@ namespace Marketwatch {
                         dialog.labelTotal.Text = item.price;
                         dialog.labelFloatValue.Text = item.floatValue.ToString();
 
-                        string displayName;
-                        //remove " (*) as its not part of the name and indicates stickers
-                        if (item.name.Contains("( * )"))
-                            displayName = item.name.Remove(item.name.LastIndexOf('"') + 1);
-                        else
-                            displayName = item.name;
-
-                        dialog.labelDisplayName.Text = displayName;
+                        dialog.labelDisplayName.Text = item.name;
 
                         for (int i = 0; i < item.stickerImages.Count; i++) {
                             dialog.toolTip.SetToolTip(dialog.stickerBoxes[i], item.stickerNames[i]);
@@ -330,7 +323,7 @@ namespace Marketwatch {
                                     JToken message = jsonResponse.SelectToken(@"message");
 
                                     if (success != null && success.Value<int>() == 1) {
-                                        MessageBox.Show(Resources.strings.PURCHASE_SUCCESS_PRE + displayName + Resources.strings.PURCHASE_SUCCESS_POST, "Marketwatch", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        MessageBox.Show(Resources.strings.PURCHASE_SUCCESS_PRE + item.name + Resources.strings.PURCHASE_SUCCESS_POST, "Marketwatch", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                     } 
                                     if (message != null) {
                                         MessageBox.Show(message.Value<string>(), "Marketwatch", MessageBoxButtons.OK, MessageBoxIcon.Error);
