@@ -36,56 +36,69 @@ namespace Marketwatch {
             get { return _paintIndex; }
             set {
                 switch (value) {
+                    // Doppler Skins
+                    // Talon-Knive, Stiletto-Knive, Navaja-Knife, Ursus-Knife, Butterfly-Knife, Huntsman-Knife, Falchion-Knife, Bowie-Knife,
+                    // Shadow-Daggers, Karambit, M9-Bayonet, Bayonet, Flip-Knife, Gut-Knife
+
+                    // Gamma Doppler
+                    // Butterfly-Knife, Bowie-Knife, Huntsman-Knife, Falchion-Knife, Shadow-Daggers, Karambit, M9-Bayonet, Flip-Knife, Gut-Knife
+                    // Glock-18
+
                     // Ruby
-                    case 415: // Default - Doppler
+                    case 415:    // Default - Doppler
                         pattern = "Ruby";
                         break;
 
                     // Sapphire
-                    case 416: // Default - Doppler
-                    case 619: // Butterfly-Knife - Doppler
-                              // Shadow-Daggers - Doppler
+                    case  416:   // Default - Doppler
+                    case  619:   // Butterfly-Knife - Doppler
+                                 // Shadow-Daggers - Doppler
                         pattern = "Sapphire";
                         break;
 
-                    case 417: // Default - Doppler
-                    case 617: // Butterfly-Knife - Doppler
-                              // Shadow-Daggers - Doppler
+                    case  417:   // Default - Doppler
+                    case  617:   // Butterfly-Knife - Doppler
+                                 // Shadow-Daggers - Doppler
                         pattern = "Black Pearl";
                         break;
 
                     // Emerald
-                    case 568: // Default - Gamma Doppler
+                    case  568:   // Default - Gamma Doppler
+                    case 1119:   // Glock-18 - Gamma Doppler
                         pattern = "Emerald";
                         break;
 
                     // Phase 1
-                    case 418: // Default - Doppler
-                    case 569: // Default - Gamma Doppler
-                    case 852: // Talon-Knife - Doppler
+                    case  418:   // Default - Doppler
+                    case  569:   // Default - Gamma Doppler
+                    case  852:   // Talon-Knife - Doppler
+                    case 1120:   // Glock-18 - Gamma Doppler
                         pattern = "Phase 1";
                         break;
 
                     // Phase 2
-                    case 419: // Default - Doppler
-                    case 570: // Default - Gamma Doppler
-                    case 618: // Butterfly-Knife - Doppler
-                              // Shadow-Daggers - Doppler
-                    case 853: // Talon-Knife - Doppler
+                    case  419:   // Default - Doppler
+                    case  570:   // Default - Gamma Doppler
+                    case  618:   // Butterfly-Knife - Doppler
+                                 // Shadow-Daggers - Doppler
+                    case  853:   // Talon-Knife - Doppler
+                    case 1121:   // Glock-18 - Gamma Doppler
                         pattern = "Phase 2";
                         break;
 
                     // Phase 3
-                    case 420: // Default - Doppler
-                    case 571: // Default - Gamma Doppler
-                    case 854: // Talon-Knife - Doppler
+                    case  420:   // Default - Doppler
+                    case  571:   // Default - Gamma Doppler
+                    case  854:   // Talon-Knife - Doppler
+                    case 1122:   // Glock-18 - Gamma Doppler
                         pattern = "Phase 3";
                         break;
 
                     // Phase 4
-                    case 421: // Default - Doppler
-                    case 572: // Default - Gamma Doppler
-                    case 855: // Talon-Knife - Doppler
+                    case  421:   // Default - Doppler
+                    case  572:   // Default - Gamma Doppler
+                    case  855:   // Talon-Knife - Doppler
+                    case 1123:   // Glock-18 - Gamma Doppler
                         pattern = "Phase 4";
                         break;
 
