@@ -2,6 +2,7 @@
 using SteamKit2.GC;
 using SteamKit2.GC.CSGO.Internal;
 using SteamKit2.Internal;
+using SteamKit2.Discovery;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -57,7 +58,21 @@ namespace Marketwatch {
         }
 
         public void managingSteamEvents() {
-            steamClient = new SteamClient();
+            var cellid = 0u;
+
+            // if we've previously connected and saved our cellid, load it.
+            if (File.Exists("cellid.txt")) {
+                if (!uint.TryParse(File.ReadAllText("cellid.txt"), out cellid)) {
+                    Console.WriteLine("Error parsing cellid from cellid.txt. Continuing with cellid 0.");
+                    cellid = 0;
+                } else {
+                    Console.WriteLine($"Using persisted cell ID {cellid}");
+                }
+            }
+
+            var configuration = SteamConfiguration.Create(b => b.WithCellID(cellid).WithServerListProvider(new FileStorageServerListProvider("servers_list.bin")));
+
+            steamClient = new SteamClient(configuration);
             steamWeb = new SteamWeb();
 
             manager = new CallbackManager(steamClient);
@@ -79,7 +94,7 @@ namespace Marketwatch {
 
             Console.WriteLine("Connecting to Steam...");
 
-            SteamDirectory.Initialize().Wait();
+            SteamDirectory.LoadAsync(configuration).Wait();
 
             steamClient.Connect();
 
@@ -93,15 +108,8 @@ namespace Marketwatch {
 
 
         private void OnConnected(SteamClient.ConnectedCallback callback) {
-            if (callback.Result != EResult.OK) {
-                Console.WriteLine("Unable to connect to Steam: {0}", callback.Result);
-
-                isRunning = false;
-                return;
-            }
-
             if (String.IsNullOrEmpty(user) || String.IsNullOrEmpty(pass)) {
-                Console.WriteLine("Unable to sign in to Steam: bad user / password ", callback.Result);
+                Console.WriteLine("Unable to sign in to Steam: bad user / password ");
 
                 isRunning = false;
                 return;
