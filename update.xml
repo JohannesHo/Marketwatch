@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 
+	RTF Tested
+	Fontsize "\fsXX" with XX/2 equals fontsize in px
+	Bold "\b <text> \b0"
+	Italic "\i <text> \i0"
+	Underline "\ul <text> \ul0"
+	Strikethrough "\strike <text> \strike0"
+	toUper "\caps <text> \caps0"
+	toLower "\scaps <text> \scaps0"
+ -->
+<sharpUpdate>
+	<update appId="Marketwatch">
+		<version>1.0.0.0</version>
+		<url>http://marketwatch.mooo.com/versions/1.0.0.0/Marketwatch.zip</url>
+		<fileName>Marketwatch.zip</fileName>
+		<md5>45814a80fc37fdbb429736f31727663f</md5>
+		<description>\bullet Initial release of Marketwatch</description>
+		<launchArgs/>
+	</update>
+	<update appId="Marketwatch">
+		<version>1.0.1.0</version>
+		<url>http://marketwatch.mooo.com/versions/1.0.1.0/Marketwatch.zip</url>
+		<fileName>Marketwatch.zip</fileName>
+		<md5>acdcb94719bf756b5166bc720d058714</md5>
+		<description>\bullet Added update check to startup \par\bullet Added a setting to deactivate checking for updates on startup</description>
+		<launchArgs/>
+	</update>
+	<update appId="Marketwatch">
+		<version>1.0.2.0</version>
+		<url>https://github.com/JohannesHo/Marketwatch/releases/download/v1.0.2.0/Marketwatch.zip</url>
+		<fileName>Marketwatch.zip</fileName>
+		<md5>d06ba665a899ff3653fdb676f626ccd1</md5>
+		<description>\bullet Initial public release of Marketwatch \par\bullet Fixed a messagebox</description>
+		<launchArgs/>
+	</update>
+	<update appId="Marketwatch">
+		<version>1.0.3.0</version>
+		<url>https://github.com/JohannesHo/Marketwatch/releases/download/v1.0.3.0/Marketwatch.zip</url>
+		<fileName>Marketwatch.zip</fileName>
+		<md5>e8057bc93878b71dc25b973f4f70178b</md5>
+		<description>\bullet Updated User Agent for requests to Steam\par\bullet Refectored market link parsing for easier maintainance\par\bullet Added MP5-SD and various knifes to market link parsing\par\bullet Some small changes for debugging
+\par\bullet Fixed a crash if steam replies unexpected to a icon download request</description>
+		<launchArgs/>
+	</update>
+	<update appId="Marketwatch">
+		<version>1.0.4.0</version>
+		<url>https://github.com/JohannesHo/Marketwatch/releases/download/v1.0.4.0/Marketwatch.zip</url>
+		<fileName>Marketwatch.zip</fileName>
+		<md5>d65f646d33633f27c120e5d0af8fec05</md5>
+		<description>\bullet Added Glove support\par\bullet Added ability to confirm login by pressing enter on password field\par\bullet Purchase menu improvements:\par\tab\bullet Added confirmation on success / Error message on fail\par\tab\bullet Added Float and Item Name\par\tab\bullet Minor GUI fixes\par</description>
+		<launchArgs/>
+	</update>
+	<update appId="Marketwatch">
+		<version>1.1.0.0</version>
+		<url>https://github.com/JohannesHo/Marketwatch/releases/download/v1.1.0.0/Marketwatch.zip</url>
+		<fileName>Marketwatch.zip</fileName>
+		<md5>tbd</md5>
+		<description>\bullet Updated phases to include newer knife variants\par\bullet Updated dependencies\par\bullet Moved update xml and download to github</description>
+		<launchArgs/>
+	</update>
+</sharpUpdate>
