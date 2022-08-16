@@ -56,7 +56,7 @@ namespace Marketwatch {
 
         public Uri UpdateXmlLocation {
             get {
-                return new Uri("http://marketwatch.mooo.com/update.xml");
+                return new Uri("https://raw.githubusercontent.com/JohannesHo/Marketwatch/master/update.xml");
             }
         }
 
