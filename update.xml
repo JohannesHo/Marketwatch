@@ -55,7 +55,7 @@
 		<version>1.1.0.0</version>
 		<url>https://github.com/JohannesHo/Marketwatch/releases/download/v1.1.0.0/Marketwatch.zip</url>
 		<fileName>Marketwatch.zip</fileName>
-		<md5>tbd</md5>
+		<md5>fa402f4349e4a4ce4c495c7ef3992159</md5>
 		<description>\bullet Updated phases to include newer knife variants\par\bullet Updated dependencies\par\bullet Moved update xml and download to github</description>
 		<launchArgs/>
 	</update>
